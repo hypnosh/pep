@@ -1,0 +1,35 @@
+.container-fluid {
+	padding-left: 7px;
+	padding-right: 7px;
+}
+.title-bar {
+	/*position: absolute;*/
+	top: 0;
+	left: 0;
+	right: 0;
+	color: crimson;
+	margin-top: 0;
+	line-height: 2em;
+	font-size: 16pt;
+	text-align: center;
+}
+.list-view {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	border-bottom: 1px solid #888;
+}
+.list-item {
+	border-width: 1px 0 0 0;
+	border-color: #888;
+	border-style: solid;
+	padding: 5px 20px;
+	min-height: 4em;
+}
+.list-item-title {
+	text-transform: uppercase;
+	font-weight: bold;
+}
+.list-item-hero {
+	height: 10em;
+}
