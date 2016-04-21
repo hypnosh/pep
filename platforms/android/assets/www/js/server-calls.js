@@ -12,16 +12,13 @@ var serverCalls = {
 		$.ajax({
 			url: WP_API_Settings.root + wpApiSettings.versionString  + postType + '/' + postId,
 			method: 'GET',
-			beforeSend: function(xhr) {
-				xhr.setRequestHeader( 'X-WP-Nonce', WP_API_Settings.nonce );
-			}
 		}).done(function(response) {
 			// console.log("done");
 			success(response);
 		}).fail(function(response) {
 			console.log("fail");
 			if (typeof(failure) == "function") {
-				failure(response);
+				failure(postId + "> " + response);
 			}
 		}).always(function(response) {
 			$("#main").removeClass('loading');
@@ -40,15 +37,12 @@ var serverCalls = {
 		$.ajax({
 			url: WP_API_Settings.root + wpApiSettings.versionString + postType + '/' + (postMeta != "" ? "?filter[meta_value]=" + postMeta : ""),
 			method: 'GET',
-			beforeSend: function( xhr ) {
-				xhr.setRequestHeader( 'X-WP-Nonce', WP_API_Settings.nonce );
-			}
 		}).done(function(response) {
 			// console.log("done");
 			success(response);
 		}).fail(function(response) {
 			if (typeof(failure) == "function") {
-				failure(response);
+				failure(postType + "> " + response);
 			}
 		}).always(function(response) {
 			$("#main").removeClass('loading');
@@ -66,15 +60,12 @@ var serverCalls = {
 			url: endpointUrl,
 			method: 'POST',
 			data: postData,
-			beforeSend: function( xhr ) {
-				xhr.setRequestHeader( 'X-WP-Nonce', WP_API_Settings.nonce );
-			}
 		}).done(function(response) {
 			console.log("done");
 			success(response);
 		}).fail(function(response) {
 			if (typeof(failure) == "function") {
-				failure(response);
+				failure(postData.id + "> " + response);
 			}
 		}).always(function(response) {
 			$("#main").removeClass('loading');
@@ -88,14 +79,11 @@ var serverCalls = {
 			data: {
 				id: id,
 			},
-			beforeSend: function( xhr ) {
-				xhr.setRequestHeader( 'X-WP-Nonce', WP_API_Settings.nonce );
-			}
 		}).done(function(response) {
 			success(response);
 		}).fail(function(response) {
 			if (typeof(failure) == "function") {
-				failure(response);
+				failure(id + "> " + response);
 			}
 		}).always(function(response) {
 			$("#main").removeClass('loading');
@@ -110,9 +98,6 @@ var serverCalls = {
 				child_id: childId,
 				parent_id: parentId
 			},
-			beforeSend: function( xhr ) {
-				xhr.setRequestHeader( 'X-WP-Nonce', WP_API_Settings.nonce );
-			}
 		}).done(function(response) {
 			success(response);
 		}).fail(function(response) {

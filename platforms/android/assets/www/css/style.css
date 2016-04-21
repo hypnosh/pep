@@ -1,8 +1,15 @@
 .container-fluid {
-	padding-left: 7px;
-	padding-right: 7px;
+	padding-left: 0;
+	padding-right: 0;
 }
-.title-bar {
+a {
+	text-decoration: none;
+}
+.hamburger {
+	font-size: 14pt;
+	margin: 20px;
+}
+.app-header {
 	/*position: absolute;*/
 	top: 0;
 	left: 0;
@@ -10,8 +17,11 @@
 	color: crimson;
 	margin-top: 0;
 	line-height: 2em;
-	font-size: 16pt;
 	text-align: center;
+}
+.app-header h1 {
+	margin: 0;
+	font-size: 16pt;
 }
 .list-view {
 	list-style-type: none;
@@ -23,6 +33,43 @@
 	border-width: 1px 0 0 0;
 	border-color: #888;
 	border-style: solid;
-	padding: 5px 10px;
+	padding: 5px 20px;
 	min-height: 4em;
+}
+.list-item-title {
+	text-transform: uppercase;
+	font-weight: bold;
+}
+.list-item-hero {
+	height: 10em;
+}
+@keyframes menuopen {
+	from: {
+		left: -300px;
+	}
+	to {
+		left: 50px;
+	}
+}
+.active-menu-link {
+	background: red;
+}
+.hidden {
+	display: none;
+}
+.menu-links {
+	text-align: center;
+	list-style-type: none;
+	margin: 5px;
+	padding: 0;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 50px;
+	bottom: 0;
+	background: white;
+	z-index: 5;
+
+/*	animation-name: menuopen;
+	animation-duration: 4s;*/
 }
