@@ -1,0 +1,5 @@
+*.bin
+*.lock
+*.jar
+/platforms/android/.gradle
+/platforms/android/CordovaLib
