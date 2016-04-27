@@ -118,7 +118,7 @@ const Header = React.createClass({
 		switch (this.props.left) {
 			case "menu":
 				var left = (
-					<div className="col-xs-1 left-anchor">
+					<div className="col-xs-2 left-anchor">
 						<ul className={"menu-links " + (this.state.showMenu ? "visible" : "hidden")}>
 							<li className="pep-logo-link"><img src="img/PEP_logo.png" /></li>
 							<li className="menu-link">
@@ -138,7 +138,7 @@ const Header = React.createClass({
 			break;
 			case "back":
 				var left = (
-					<div className="col-xs-1 left-anchor">
+					<div className="col-xs-2 left-anchor">
 						<a href="#" className="maticon">chevron_left</a>
 					</div>
 				);
@@ -148,7 +148,7 @@ const Header = React.createClass({
 		switch (this.props.right) {
 			case "refresh":
 				var right = (
-					<div className="col-xs-1">
+					<div className="col-xs-2 right-anchor">
 						<span onClick={this.refresh} className="maticon">cloud_download</span>
 					</div>
 				);
@@ -162,7 +162,7 @@ const Header = React.createClass({
 				{bgimg}
 				{left}
 				<span className="event-date-in-header">{this.props.eventDate}</span>
-				<h1 className="col-xs-9">{this.props.title}</h1>
+				<h1 className="col-xs-8 screen-title">{this.props.title}</h1>
 				{right}
 				<div className="clearfix"></div>
 			</div>
@@ -220,7 +220,7 @@ const EventListItem = React.createClass({
 				<div className={this.props.listItemClass}>
 					<a
 						onClick={this.faveme}
-						className={"glyphicon glyphicon-heart event-icon-in-list event-icon" + (this.state.followed ? " faved" : "")}></a>
+						className={"maticon event-icon-in-list event-icon" + (this.state.followed ? " faved" : "")}>{this.state.followed ? "favorite" : "favorite_border"}</a>
 					<Link to={"/events/" + element.id}>
 						{(element.hasOwnProperty("medium_image") && (this.props.listType=="hero")) ? <img src={element.medium_image} /> : (element.hasOwnProperty("thumbnail_image") ? <img src={element.thumbnail_image} /> : <img/> )}
 						<h5 className="list-item-title">
@@ -481,7 +481,7 @@ const TheEvent = React.createClass({
 				<div className="col-xs-3 event-sidebar">
 					<a
 						onClick={this.faveme}
-						className={"maticon event-icon" + (this.state.followed ? " faved" : "")}>favorite</a>
+						className={"maticon event-icon" + (this.state.followed ? " faved" : "")}>{this.state.followed ? "favorite" : "favorite_border"}</a>
 					<a
 						onClick={this.share}
 						className="maticon event-icon">share</a>

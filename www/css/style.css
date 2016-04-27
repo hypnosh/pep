@@ -34,7 +34,7 @@ a {
 	font-size: 14pt;
 	margin: 20px;
 }
-.left-anchor {
+.left-anchor, .right-anchor {
 	padding-left: 20px;
 	font-size: 20px;
 }
@@ -80,6 +80,9 @@ a {
 	bottom: 5px;
 	font-size: 20px;
 	text-align: left;
+}
+.left-anchor, .right-anchor, .screen-title {
+	line-height: 2em;
 }
 .list-view {
 	list-style-type: none;
