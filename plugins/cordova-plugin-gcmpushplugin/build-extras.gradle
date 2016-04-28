@@ -1,0 +1,15 @@
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+		classpath 'com.android.tools.build:gradle:2.1.0'
+    	classpath 'com.google.gms:google-services:2.0.0-alpha6'
+    }
+}
+dependencies {
+    compile "com.google.android.gms:play-services-gcm:8.4.0"
+}
+apply plugin: 'com.google.gms.google-services'

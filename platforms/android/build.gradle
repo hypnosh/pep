@@ -23,7 +23,8 @@ apply plugin: 'android'
 
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
+
     }
 
     // Switch the Android Gradle plugin version requirement depending on the
@@ -47,7 +48,7 @@ buildscript {
 
 // Allow plugins to declare Maven dependencies via build-extras.gradle.
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 task wrapper(type: Wrapper) {
@@ -96,6 +97,7 @@ ext {
 }
 
 // PLUGIN GRADLE EXTENSIONS START
+apply from: "cordova-plugin-gcmpushplugin/pep-build-extras.gradle"
 // PLUGIN GRADLE EXTENSIONS END
 
 def hasBuildExtras = file('build-extras.gradle').exists()

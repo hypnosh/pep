@@ -1,6 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.stories.pep" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.stories.pep" version="0.1.0001" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <preference name="loglevel" value="DEBUG" />
+    <feature name="GCMPushPlugin">
+        <param name="android-package" value="com.gonzaloaune.cordova.gcm.GCMPushPlugin" />
+        <param name="onload" value="true" />
+    </feature>
     <feature name="Whitelist">
         <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
         <param name="onload" value="true" />
@@ -11,11 +15,11 @@
     <allow-intent href="market:*" />
     <name>PEP</name>
     <description>
-        The app for PEP Talks
-    </description>
+		The app for PEP Talks
+	</description>
     <author email="amitksharma@gmail.com" href="http://recaptured.in">
-        Amit Sharma
-    </author>
+		Amit Sharma
+	</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
@@ -24,4 +28,7 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <preference name="Fullscreen" value="true" />
+    <preference name="WebViewBounce" value="true" />
+    <preference name="Orientation" value="portrait" />
 </widget>

@@ -119,7 +119,7 @@ const EventListItem = React.createClass({
 		}
 
 	}
-});
+}); // EventListItem
 const Events = React.createClass({
 	render: function() {
 		return(
@@ -130,7 +130,7 @@ const Events = React.createClass({
 		);
 	}
 });
-const Event = React.createClass({
+const EventOld = React.createClass({
 	render: function() {
 		return(
 			<div className="row">

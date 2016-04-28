@@ -11,6 +11,29 @@ const browserHistory = ReactRouter.browserHistory;
 const IndexRoute = ReactRouter.IndexRoute;
 // const ReactSwipe = ReactSwipe.ReactSwipe;
 
+const registerPushNotifications = function() {
+	if (window.GcmPushPlugin !== undefined) {
+		window.GcmPushPlugin.register(successHandler, errorHandler, {
+			"senderId": "2177584716",
+			"jsCallback": "onNotification"
+		});
+	}
+} // registerPushNotifications
+
+const successHandler = function (result) {
+	console.log(result.gcm);
+} // successHandler
+
+const errorHandler = function(error) {
+	console.log(error);
+} // errorHandler
+
+const onNotification = function(notification) {
+	console.log(e);
+	console.log(notification);
+	alert("push")!
+} //onNotification
+
 const DataLayer = {
 	event: function(id, callback) {
 		var home = this;
@@ -131,7 +154,7 @@ const Header = React.createClass({
 								<Link activeClassName="active-menu-link" to="/social" onClick={this.toggleMenu}><i className="maticon">question_answer</i> Social</Link>
 							</li>
 						</ul>
-						<span onClick={this.toggleMenu} className="maticon">menu</span>
+						<a onClick={this.toggleMenu} className="maticon">menu</a>
 					</div>
 				);
 				var headerStyle = "top";
@@ -149,7 +172,7 @@ const Header = React.createClass({
 			case "refresh":
 				var right = (
 					<div className="col-xs-2 right-anchor">
-						<span onClick={this.refresh} className="maticon">cloud_download</span>
+						<a onClick={this.refresh} className="maticon">cloud_download</a>
 					</div>
 				);
 		}
@@ -497,6 +520,7 @@ const TheEvent = React.createClass({
 		);
 	}
 });
+
 React.render((
 	<Router>
 		<Route component={Main} title="PEP">

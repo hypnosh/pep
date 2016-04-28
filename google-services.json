@@ -1,0 +1,61 @@
+{
+  "project_info": {
+    "project_number": "2177584716",
+    "project_id": "pep-talks"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2177584716:android:c87cd5dc91c68d24",
+        "android_client_info": {
+          "package_name": "com.stories.pep"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFDLCH3tFYWsS2scy83yDDF2I1I8uX3sA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2177584716:android:c4bcaa244b24bac6",
+        "android_client_info": {
+          "package_name": "com.pepasia.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFDLCH3tFYWsS2scy83yDDF2I1I8uX3sA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

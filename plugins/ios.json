@@ -27,6 +27,10 @@
                         {
                             "xml": "<feature name=\"SocialSharing\"><param name=\"ios-package\" value=\"SocialSharing\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"GCMPushPlugin\"><param name=\"ios-package\" value=\"GCMPushPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -39,6 +43,9 @@
         },
         "cordova-plugin-x-socialsharing": {
             "PACKAGE_NAME": "com.stories.pep"
+        },
+        "cordova-plugin-gcmpushplugin": {
+            "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
         }
     },
     "dependent_plugins": {}

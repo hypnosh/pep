@@ -14,5 +14,13 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "cordova-plugin-gcmpushplugin": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-gcmpushplugin"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }
