@@ -1,3 +1,12 @@
+// yellow: #ffbe00
+// beige: #eff0e0
+// blue: #01698c
+// red: #ff4d4d
+// black: #444
+
+body, html, *, p, li, div, span {
+	font-family: arial, 'Open Sans', helvetica, arial, "roboto", sans-serif;
+}
 .maticon {
   font-family: 'Material Icons';
   font-weight: normal;
@@ -35,8 +44,25 @@ a {
 	margin: 20px;
 }
 .left-anchor, .right-anchor {
-	padding-left: 20px;
+	position: absolute;
 	font-size: 20px;
+	width: 80px;
+}
+.left-anchor {
+	top: 0;
+	left: 0;
+}
+.right-anchor {
+	top: 0;
+	right: 0;
+}
+.screen-title {
+	position: absolute;
+	left: 80px;
+	right: 80px;
+}
+.app-title-image {
+	height: 30px;
 }
 .app-header {
 	position: absolute;
@@ -80,6 +106,7 @@ a {
 	bottom: 5px;
 	font-size: 20px;
 	text-align: left;
+	line-height: 1em;``
 }
 .left-anchor, .right-anchor, .screen-title {
 	line-height: 2em;
@@ -91,18 +118,24 @@ a {
 	/*border-top: 1px solid #888;*/
 }
 .list-item {
-	padding: 0 15px;
 	min-height: 4em;
 	margin-bottom: 10px;
 	box-shadow: 0 1px 5px 1px #ddd;
 	overflow: hidden;
+	position: relative;
 }
 .list-item-title {
 	font-weight: bold;
-	margin-right: 10px;
+	font-style: italic;
+	font-family: "Open Sans";
+	position: absolute;
+	top: 90px;
+	left: 10px;
+	right: 10px;
 	line-height: 1.1em;
 	margin-bottom: 5px;
-	margin-left: 10px;
+	color: #fff;
+	text-align: center;
 }
 .list-item-description {
 	font-size: 13px;
@@ -119,12 +152,8 @@ a {
 		font-size: 17px;
 	}
 .list-item-normal img {
-	float: left;
-	height: 85px;
 	width: auto;
 	margin-right: 15px;
-}
-.list-item-hero img {
 	min-width: 100%;
 	max-height: 177px;
 }
@@ -168,6 +197,13 @@ a {
 	font-size: 12px;
 	line-height: 2em;
 	padding-top: 1.4em;
+}
+.event-content li {
+	background: #eff0e0;
+	margin: 5px 0;
+	padding: 5px 0;
+	text-align: center;
+	font-size: 15pt;
 }
 .event-sidebar {
 	padding-top: 1.4em;

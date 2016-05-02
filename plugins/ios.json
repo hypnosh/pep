@@ -18,6 +18,24 @@
                             "xml": true,
                             "count": 1
                         }
+                    ],
+                    "AddressBook.framework": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
+                    ],
+                    "libsqlite3.tbd": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
+                    ],
+                    "libz.tbd": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
                     ]
                 }
             },
@@ -29,7 +47,29 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"GCMPushPlugin\"><param name=\"ios-package\" value=\"GCMPushPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "xml": "<feature name=\"PushNotification\"><param name=\"ios-package\" value=\"PushPlugin\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
+            },
+            "*-Info.plist": {
+                "parents": {
+                    "UIBackgroundModes": [
+                        {
+                            "xml": "<array><string>remote-notification</string></array>",
+                            "count": 1
+                        }
+                    ],
+                    "GCM_SENDER_ID": [
+                        {
+                            "xml": "<string>2177584716</string>",
+                            "count": 1
+                        }
+                    ],
+                    "IS_GCM_ENABLED": [
+                        {
+                            "xml": "<true />",
                             "count": 1
                         }
                     ]
@@ -44,8 +84,9 @@
         "cordova-plugin-x-socialsharing": {
             "PACKAGE_NAME": "com.stories.pep"
         },
-        "cordova-plugin-gcmpushplugin": {
-            "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
+        "phonegap-plugin-push": {
+            "SENDER_ID": "2177584716",
+            "PACKAGE_NAME": "com.stories.pep"
         }
     },
     "dependent_plugins": {}

@@ -23,8 +23,7 @@ apply plugin: 'android'
 
 buildscript {
     repositories {
-        jcenter()
-
+        mavenCentral()
     }
 
     // Switch the Android Gradle plugin version requirement depending on the
@@ -48,7 +47,7 @@ buildscript {
 
 // Allow plugins to declare Maven dependencies via build-extras.gradle.
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 task wrapper(type: Wrapper) {
@@ -97,7 +96,7 @@ ext {
 }
 
 // PLUGIN GRADLE EXTENSIONS START
-apply from: "cordova-plugin-gcmpushplugin/pep-build-extras.gradle"
+apply from: "phonegap-plugin-push/pep-push.gradle"
 // PLUGIN GRADLE EXTENSIONS END
 
 def hasBuildExtras = file('build-extras.gradle').exists()
@@ -247,6 +246,9 @@ dependencies {
     // SUB-PROJECT DEPENDENCIES START
     debugCompile project(path: "CordovaLib", configuration: "debug")
     releaseCompile project(path: "CordovaLib", configuration: "release")
+    debugCompile project(path: "google-play-services_lib", configuration: "debug")
+    releaseCompile project(path: "google-play-services_lib", configuration: "release")
+    compile "com.android.support:support-v13:23+"
     // SUB-PROJECT DEPENDENCIES END
 }
 

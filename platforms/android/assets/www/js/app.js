@@ -1,4 +1,5 @@
 var API_Settings = {
+	server: "http://pep.photo/",
 	root: "http://pep.photo/wp-json/",
 	versionString : "wp/v2/",
 	nonce: null,
@@ -12,27 +13,50 @@ const IndexRoute = ReactRouter.IndexRoute;
 // const ReactSwipe = ReactSwipe.ReactSwipe;
 
 const registerPushNotifications = function() {
-	if (window.GcmPushPlugin !== undefined) {
-		window.GcmPushPlugin.register(successHandler, errorHandler, {
-			"senderId": "2177584716",
-			"jsCallback": "onNotification"
+	var push = PushNotification.init({
+		android: {
+			senderID: "2177584716"
+		}
+	});
+	console.log("starting push");
+	push.on('registration', function(data) {
+		// data.registrationId
+		var regId = data.registrationId;
+		if (localStorage.myEmail == undefined) {
+			var myEmail = prompt("What's your email address?");
+		} else {
+			var myEmail = localStorage.myEmail;
+		}
+		var data = {
+			token: regId,
+			os: "Android",
+			email: myEmail
+		};
+		$.post(API_Settings.server + "pnfw/register/", data, function(response) {
+			console.log(response);
+		}, function(error) {
+			console.log(error);
 		});
-	}
+	});
+	push.on('notification', function(data) {
+		// data.message,
+		// data.title,
+		// data.count,
+		// data.sound,
+		// data.image,
+		// data.additionalData
+		console.log(data);
+		alert("push");
+	}); //onNotification
+	push.on('error', function(error) {
+		console.log(error);
+	})
+	PushNotification.hasPermission(function(data) {
+		console.log(data);
+	});
 } // registerPushNotifications
 
-const successHandler = function (result) {
-	console.log(result.gcm);
-} // successHandler
 
-const errorHandler = function(error) {
-	console.log(error);
-} // errorHandler
-
-const onNotification = function(notification) {
-	console.log(e);
-	console.log(notification);
-	alert("push")!
-} //onNotification
 
 const DataLayer = {
 	event: function(id, callback) {
@@ -52,28 +76,29 @@ const DataLayer = {
 	},
 	events: function(callback) {
 		var home = this;
-		if (localStorage.getItem("events") != undefined) {
+		var amInew = (localStorage.getItem("events") != undefined);
+		serverCalls.getAll("events", function(response) {
+			for (var i = response.length - 1; i >= 0; i--) {
+				var response_one = response[i];
+				home.getImages(response_one);
+				console.log(i);
+			}
+			localStorage.setItem("events", JSON.stringify(response));
+			if (!amInew && (typeof(callback) == "function")) {
+				callback(response);
+			}
+		}, function(error) {
+			console.log(error);
+		});
+		if (amInew) {
 			callback(jQuery.parseJSON(localStorage.getItem("events")));
-		} else {
-			serverCalls.getAll("events", function(response) {
-				for (var i = response.length - 1; i >= 0; i--) {
-					var response_one = response[i];
-					home.getImages(response_one);
-				}
-				localStorage.setItem("events", JSON.stringify(response));
-				if (typeof(callback) == "function") {
-					callback(response);
-				}
-			}, function(error) {
-				console.log(error);
-			});
 		}
+
 	},
 	getImages: function(response_one) {
 		if (response_one.featured_media > 0) {
 			serverCalls.getOne("media", response_one.featured_media, function(media) {
 				response_one.medium_image = media.media_details.sizes.full.source_url;
-				response_one.thumbnail_image = media.media_details.sizes.thumbnail.source_url;
 				localStorage.setItem("event_" + response_one.id, JSON.stringify(response_one));
 			}, function(error) {
 				console.log(error);
@@ -139,9 +164,19 @@ const Header = React.createClass({
 	},
 	render: function() {
 		switch (this.props.left) {
+			case "back":
+				var left = (
+					<div className="left-anchor">
+						<a href="#" className="maticon">chevron_left</a>
+					</div>
+				);
+				var headerStyle = "middle";
+			break;
+		}
+		switch (this.props.right) {
 			case "menu":
 				var left = (
-					<div className="col-xs-2 left-anchor">
+					<div className="right-anchor">
 						<ul className={"menu-links " + (this.state.showMenu ? "visible" : "hidden")}>
 							<li className="pep-logo-link"><img src="img/PEP_logo.png" /></li>
 							<li className="menu-link">
@@ -159,19 +194,9 @@ const Header = React.createClass({
 				);
 				var headerStyle = "top";
 			break;
-			case "back":
-				var left = (
-					<div className="col-xs-2 left-anchor">
-						<a href="#" className="maticon">chevron_left</a>
-					</div>
-				);
-				var headerStyle = "middle";
-			break;
-		}
-		switch (this.props.right) {
 			case "refresh":
 				var right = (
-					<div className="col-xs-2 right-anchor">
+					<div className="right-anchor">
 						<a onClick={this.refresh} className="maticon">cloud_download</a>
 					</div>
 				);
@@ -180,12 +205,17 @@ const Header = React.createClass({
 		if (this.props.background != undefined) {
 			var bgimg = (<img src={this.props.background} className="event-image" />);
 		}
+		if (this.props.title == "PEP") {
+			var screenTitle = (<img src="img/pep_logo_red.png" className="app-title-image" />);
+		} else {
+			var screenTitle = this.props.title;
+		}
 		return(
 			<div className={"app-header headertype-" + headerStyle + " eventheader-" + this.props.eventid} >
 				{bgimg}
 				{left}
 				<span className="event-date-in-header">{this.props.eventDate}</span>
-				<h1 className="col-xs-8 screen-title">{this.props.title}</h1>
+				<h1 className={"screen-title" + (this.props.title=="PEP" ? " home-title" : "")}>{screenTitle}</h1>
 				{right}
 				<div className="clearfix"></div>
 			</div>
@@ -245,12 +275,12 @@ const EventListItem = React.createClass({
 						onClick={this.faveme}
 						className={"maticon event-icon-in-list event-icon" + (this.state.followed ? " faved" : "")}>{this.state.followed ? "favorite" : "favorite_border"}</a>
 					<Link to={"/events/" + element.id}>
-						{(element.hasOwnProperty("medium_image") && (this.props.listType=="hero")) ? <img src={element.medium_image} /> : (element.hasOwnProperty("thumbnail_image") ? <img src={element.thumbnail_image} /> : <img/> )}
+						{(element.hasOwnProperty("medium_image")) ? <img src={element.medium_image} /> : (element.hasOwnProperty("thumbnail_image") ? <img src={element.thumbnail_image} /> : <img/> )}
 						<h5 className="list-item-title">
 								{element.title.rendered}
 						</h5>
 						<div className="list-item-description">
-							<p className="list-item-description-text">{jQuery(element.excerpt.rendered).text()}</p>
+							<p className="list-item-description-text">{element.acf.speaker} & {element._OrganizerOrganizer}</p>
 							<p className="list-item-description-time">{nice_date} {fromNicetime} to {toNicetime}</p>
 						</div>
 					</Link>
@@ -263,13 +293,19 @@ const EventListItem = React.createClass({
 }); // EventListItem
 
 const Main = React.createClass({
+	getInitialState: function() {
+		return {
+			children: "",
+		};
+	},
 	componentDidMount: function() {
-		if (localStorage.events == undefined) {
-			// first run
-			// fetch all data
-			DataLayer.events(function(response) {
-				// no dothing
-			});
+		DataLayer.events(function(response) {
+			// no dothing
+		});
+		if (localStorage.myEmail == undefined) {
+			this.setState
+		} else {
+			this.setState({children: this.props.children});
 		}
 	},
 	render: function() {
@@ -300,41 +336,41 @@ const Home = React.createClass({
 		// load data into events array
 		if (localStorage.events != undefined) {
 			var events = jQuery.parseJSON(localStorage.events);
-			console.log(events);
-			var sorted = events.sort(function(a, b) {
-				if (a.hasOwnProperty.hero_event && b.hasOwnProperty.hero_event) {
-					console.log("0");
-					return 0;
-				}
-				if (a.hasOwnProperty.hero_event && !b.hasOwnProperty.hero_event) {
-					console.log("-1");
-					return -1;
-				}
-				if (!a.hasOwnProperty.hero_event && b.hasOwnProperty.hero_event) {
-					console.log("1");
-					return 1;
-				}
-			}).reverse();
-			console.log(sorted);
+			// console.log(events);
+			// var sorted = events.sort(function(a, b) {
+			// 	if (a.hasOwnProperty.hero_event && b.hasOwnProperty.hero_event) {
+			// 		console.log("0");
+			// 		return 0;
+			// 	}
+			// 	if (a.hasOwnProperty.hero_event && !b.hasOwnProperty.hero_event) {
+			// 		console.log("-1");
+			// 		return -1;
+			// 	}
+			// 	if (!a.hasOwnProperty.hero_event && b.hasOwnProperty.hero_event) {
+			// 		console.log("1");
+			// 		return 1;
+			// 	}
+			// }).reverse();
+			// console.log(sorted);
 			this.setState({
-				events: sorted
+				events: events
 			});
 		} else {
 			DataLayer.events( function(response) {
 				this.setState({
 					events: response
 				});
-			});
+			}.bind(this));
 		}
 	},
 	render: function() {
 		var events = this.state.events.map( function(element, idx) {
 			if (element.hasOwnProperty("hero_event")) {
 				var listType = "hero";
-				var listItemClass = "list-item list-item-hero col-xs-12";
+				var listItemClass = "list-item list-item-hero";
 			} else {
 				var listType = "normal";
-				var listItemClass = "list-item list-item-normal col-xs-12";
+				var listItemClass = "list-item list-item-normal";
 			}
 			// console.log(element);
 			return (
@@ -346,7 +382,7 @@ const Home = React.createClass({
 					listItemClass={listItemClass} />
 			);
 		});
-		var header = (<Header title="PEP" left="menu" right="refresh" />);
+		var header = (<Header title="PEP" right="menu" />);
 		return (
 			<section className="list-view">
 				{header}
@@ -383,7 +419,7 @@ const Faved = React.createClass({
 	},
 	render: function() {
 		var events = this.state.events.map( function(element, idx) {
-			var listItemClass = "list-item list-item-normal col-xs-12";
+			var listItemClass = "list-item list-item-normal";
 			return (
 				<EventListItem
 					key={idx}
@@ -394,7 +430,7 @@ const Faved = React.createClass({
 		});
 		if (!this.state.haveFaves) {
 			events = (
-				<li className="col-xs-offset-1 col-xs-10">You haven&rsquo;t selected any events yet</li>
+				<li className="empty-message">You haven&rsquo;t selected any events yet</li>
 			);
 		}
 		var header = (<Header title="My Schedule" left="menu" />);
@@ -415,7 +451,7 @@ const Social = React.createClass({
 	render: function() {
 		var socials = this.state.socials.map(function(element, idx) {
 			return (
-				<li className="col-xs-offset-1 col-xs-10" key={idx}>
+				<li className="social-box" key={idx}>
 					<a href={element.link}>
 						<img src={element.img} alt={element.caption} />
 					</a>
@@ -499,9 +535,9 @@ const TheEvent = React.createClass({
 			var dt = niceDate(st);
 		}
 		return (
-			<div className="col-xs-12">
+			<div className="event">
 				<Header title={this.state.event.title.rendered} eventDate={dt} background={this.state.event.medium_image} eventid={this.props.params.id} left="back" />
-				<div className="col-xs-3 event-sidebar">
+				<div className="event-sidebar">
 					<a
 						onClick={this.faveme}
 						className={"maticon event-icon" + (this.state.followed ? " faved" : "")}>{this.state.followed ? "favorite" : "favorite_border"}</a>
@@ -513,7 +549,7 @@ const TheEvent = React.createClass({
 						<span className="event-end">{end}</span>
 					</p>
 				</div>
-				<div className="col-xs-9 event-content">
+				<div className="event-content">
 					<div dangerouslySetInnerHTML={xContent} />
 				</div>
 			</div>
@@ -533,3 +569,8 @@ React.render((
 	</Router>
 	), document.getElementById("root")
 );
+
+document.addEventListener('deviceready', function() {
+	console.log("deviceready fired");
+	registerPushNotifications();
+}, false);
