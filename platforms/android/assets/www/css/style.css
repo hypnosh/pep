@@ -1,11 +1,20 @@
-// yellow: #ffbe00
+/* yellow: #ffbe00
 // beige: #eff0e0
 // blue: #01698c
 // red: #ff4d4d
-// black: #444
+// black: #444 */
 
-body, html, *, p, li, div, span {
-	font-family: arial, 'Open Sans', helvetica, arial, "roboto", sans-serif;
+ *, html, body, p, li, div, span {
+	font-family: 'Open Sans', helvetica, arial, sans-serif;
+}
+b, strong {
+	font-family: 'Open Sans Bold';
+}
+i, em {
+	font-family: 'Open Sans Italic';
+}
+b i, i b, strong em, em strong, b em, em b, strong i, i strong {
+	font-family: 'Open Sans Bold Italic';
 }
 .maticon {
   font-family: 'Material Icons';
@@ -57,9 +66,15 @@ a {
 	right: 0;
 }
 .screen-title {
+	font-family: 'Open Sans Bold';
 	position: absolute;
-	left: 80px;
+	left: 70px;
 	right: 80px;
+}
+.home-title {
+	text-align: left;
+	left: 10px;
+	top: 8px;
 }
 .app-title-image {
 	height: 30px;
@@ -118,47 +133,55 @@ a {
 	/*border-top: 1px solid #888;*/
 }
 .list-item {
+	margin-left: 9px;
+	margin-right: 9px;
 	min-height: 4em;
-	margin-bottom: 10px;
-	box-shadow: 0 1px 5px 1px #ddd;
+	margin-bottom: 6px;
+	/*box-shadow: 0 1px 5px 1px #ddd;*/
 	overflow: hidden;
 	position: relative;
 }
 .list-item-title {
-	font-weight: bold;
-	font-style: italic;
-	font-family: "Open Sans";
+	font-family: "Open Sans Bold Italic";
 	position: absolute;
-	top: 90px;
+	bottom: 40px;
 	left: 10px;
 	right: 10px;
 	line-height: 1.1em;
 	margin-bottom: 5px;
 	color: #fff;
 	text-align: center;
+	opacity: .85;
 }
 .list-item-description {
 	font-size: 13px;
 	margin-left: 10px;
 }
 	.list-item-description-text {
+		color: #fff;
+		text-transform: uppercase;
+		font-size: 9pt;
+		position: absolute;
+		bottom: 25px;
+		left: 10px;
+		right: 10px;
+		opacity: .85;
+		text-align: center;
 		max-height: 3em;
 		overflow: hidden;
 	}
 	.list-item-description-time {
-		font-weight: bold;
+		font-family: 'Open Sans Bold';
 	}
 	.list-item-hero .list-item-title {
 		font-size: 17px;
 	}
 .list-item-normal img {
-	width: auto;
+	width: 100%;
 	margin-right: 15px;
-	min-width: 100%;
-	max-height: 177px;
 }
-.active-menu-link {
-	font-weight: bold;
+.active-menu-link span {
+	font-family: 'Open Sans Bold';
 }
 .hidden {
 	display: none;
@@ -169,12 +192,12 @@ a {
 	/*margin: 5px;*/
 	padding: 20px 0 0 0;
 	position: fixed;
-	left: 0;
+	right: 0;
 	width: 70%;
 	top: 48px;
 	bottom: 0;
 	background: white;
-	background-color: crimson;
+	background-color: #ffbe00;
 	z-index: 5;
 }
 .pep-logo-link img {
@@ -183,13 +206,14 @@ a {
 	margin-bottom: 20px;
 }
 .menu-link {
-	margin-bottom: 25px;
+	background: #eff0e0;
+	margin-bottom: 5px;
 }
 .menu-link i {
 	margin-right: 10px;
 }
 .menu-link a {
-	color: #fff;
+	color: #444;
 	font-size: 17px;
 	padding: 10px 0 10px 25px;
 }
@@ -210,8 +234,7 @@ a {
 	font-size: 12px;
 }
 .event-image {
-	min-height: 100%;
-	min-width: 100%;
+	width: 100%;
 	opacity: .9;
 }
 .event-icon {
@@ -233,4 +256,24 @@ a, a:hover, a:focus, a:active, .event-icon, .event-icon:hover, .event-icon:focus
 }
 .faved, .faved:hover, .faved:focus {
 	color: red;
+}
+.map-iframe {
+	margin-top: 48px;
+	width: 100%;
+	margin-bottom: -10px;
+}
+.shareable-description {
+	background: #ff4d4d;
+	padding: 11px 14px 6px;
+}
+.loading {
+	position: fixed;
+	z-index: -60;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	   -moz-transform: translate(-50%, -50%);
+	    -ms-transform: translate(-50%, -50%);
+	     -o-transform: translate(-50%, -50%);
+	        transform: translate(-50%, -50%);
 }

@@ -24,5 +24,21 @@
         "variables": {
             "SENDER_ID": "2177584716"
         }
+    },
+    "cordova-plugin-dialogs": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-dialogs"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-velda-devicefeedback": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-velda-devicefeedback"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

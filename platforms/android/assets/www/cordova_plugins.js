@@ -18,6 +18,27 @@ module.exports = [
         "clobbers": [
             "PushNotification"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-dialogs/www/notification.js",
+        "id": "cordova-plugin-dialogs.notification",
+        "merges": [
+            "navigator.notification"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-dialogs/www/android/notification.js",
+        "id": "cordova-plugin-dialogs.notification_android",
+        "merges": [
+            "navigator.notification"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-velda-devicefeedback/DeviceFeedback.js",
+        "id": "cordova-plugin-velda-devicefeedback.DeviceFeedback",
+        "clobbers": [
+            "window.plugins.deviceFeedback"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -25,7 +46,9 @@ module.exports.metadata =
 {
     "cordova-plugin-whitelist": "1.2.1",
     "cordova-plugin-x-socialsharing": "5.0.12",
-    "phonegap-plugin-push": "1.6.3"
+    "phonegap-plugin-push": "1.6.3",
+    "cordova-plugin-dialogs": "1.2.1",
+    "cordova-plugin-velda-devicefeedback": "0.0.2"
 }
 // BOTTOM OF METADATA
 });

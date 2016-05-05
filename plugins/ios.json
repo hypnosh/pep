@@ -36,6 +36,12 @@
                             "xml": false,
                             "count": 1
                         }
+                    ],
+                    "AudioToolbox.framework": [
+                        {
+                            "xml": true,
+                            "count": 1
+                        }
                     ]
                 }
             },
@@ -48,6 +54,10 @@
                         },
                         {
                             "xml": "<feature name=\"PushNotification\"><param name=\"ios-package\" value=\"PushPlugin\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Notification\"><param name=\"ios-package\" value=\"CDVNotification\" /></feature>",
                             "count": 1
                         }
                     ]
@@ -86,6 +96,12 @@
         },
         "phonegap-plugin-push": {
             "SENDER_ID": "2177584716",
+            "PACKAGE_NAME": "com.stories.pep"
+        },
+        "cordova-plugin-dialogs": {
+            "PACKAGE_NAME": "com.stories.pep"
+        },
+        "cordova-plugin-velda-devicefeedback": {
             "PACKAGE_NAME": "com.stories.pep"
         }
     },

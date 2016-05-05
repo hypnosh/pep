@@ -1,4 +1,4 @@
-var API_Settings = {
+const API_Settings = {
 	server: "http://pep.photo/",
 	root: "http://pep.photo/wp-json/",
 	versionString : "wp/v2/",
@@ -12,139 +12,32 @@ const browserHistory = ReactRouter.browserHistory;
 const IndexRoute = ReactRouter.IndexRoute;
 // const ReactSwipe = ReactSwipe.ReactSwipe;
 
-const registerPushNotifications = function() {
-	var push = PushNotification.init({
-		android: {
-			senderID: "2177584716"
-		}
-	});
-	console.log("starting push");
-	push.on('registration', function(data) {
-		// data.registrationId
-		var regId = data.registrationId;
-		if (localStorage.myEmail == undefined) {
-			var myEmail = prompt("What's your email address?");
-		} else {
-			var myEmail = localStorage.myEmail;
-		}
-		var data = {
-			token: regId,
-			os: "Android",
-			email: myEmail
+const Register = React.createClass({
+	getInitialState: function() {
+		return {
+			myEmail: ""
 		};
-		$.post(API_Settings.server + "pnfw/register/", data, function(response) {
-			console.log(response);
-		}, function(error) {
-			console.log(error);
+	},
+	updateEmail: function(e) {
+		this.setState({
+			myEmail: e.target.value
 		});
-	});
-	push.on('notification', function(data) {
-		// data.message,
-		// data.title,
-		// data.count,
-		// data.sound,
-		// data.image,
-		// data.additionalData
-		console.log(data);
-		alert("push");
-	}); //onNotification
-	push.on('error', function(error) {
-		console.log(error);
-	})
-	PushNotification.hasPermission(function(data) {
-		console.log(data);
-	});
-} // registerPushNotifications
-
-
-
-const DataLayer = {
-	event: function(id, callback) {
-		var home = this;
-		if (localStorage.getItem("event_" + id) != undefined) {
-			callback(jQuery.parseJSON(localStorage.getItem("event_" + id)));
-		} else {
-			serverCalls.getOne(id, "events", function(response) {
-				home.getImages(response);
-				if (typeof(callback) == "function") {
-					callback(response);
-				}
-			}, function(error) {
-				console.log(error);
-			})
-		}
 	},
-	events: function(callback) {
-		var home = this;
-		var amInew = (localStorage.getItem("events") != undefined);
-		serverCalls.getAll("events", function(response) {
-			for (var i = response.length - 1; i >= 0; i--) {
-				var response_one = response[i];
-				home.getImages(response_one);
-				console.log(i);
-			}
-			localStorage.setItem("events", JSON.stringify(response));
-			if (!amInew && (typeof(callback) == "function")) {
-				callback(response);
-			}
-		}, function(error) {
-			console.log(error);
-		});
-		if (amInew) {
-			callback(jQuery.parseJSON(localStorage.getItem("events")));
-		}
-
+	setEmail: function() {
+		haptic();
+		localStorage.setItem("myEmail", this.state.myEmail);
+		// window.location = "/";
+		location.reload();
 	},
-	getImages: function(response_one) {
-		if (response_one.featured_media > 0) {
-			serverCalls.getOne("media", response_one.featured_media, function(media) {
-				response_one.medium_image = media.media_details.sizes.full.source_url;
-				localStorage.setItem("event_" + response_one.id, JSON.stringify(response_one));
-			}, function(error) {
-				console.log(error);
-			});
-		}
-	},
-	socials: function() {
-		return [{
-			caption: "Facebook",
-			link: "http://www.facebook.com/pep",
-			img: ""
-		},{
-			caption: "Twitter",
-			link: "http://www.twitter.com/peptalks",
-			img: ""
-		}];
+	render: function() {
+		return (
+			<div>
+				<input type="email" required value={this.state.myEmail} onChange={this.updateEmail} />
+				<input type="button" value="Submit" onTouchStart={this.setEmail} />
+			</div>
+		);
 	}
-}; // DataLayer
-
-const dateForSafari = function(dateString) {
-	if (typeof(dateString) == "object") {
-		dateString = dateString[0];
-	} else {
-		console.log(typeof(dateString));
-	}
-	return new Date(dateString.replace(/-/g, "/"));
-} // dateForSafari
-const niceDate = function(dateObj) {
-	var nowTime = new Date();
-	var day = dateObj.getDate();
-	var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][dateObj.getMonth()];
-	if (nowTime.getFullYear() != dateObj.getFullYear()) {
-		var year = dateObj.getFullYear();
-		return day + " " + month + " " + year;
-	} else {
-		return day + " " + month;
-	}
-} // niceDate()
-const niceTime = function(dateObj) {
-	var hours = dateObj.getHours();
-	var minutes = dateObj.getMinutes();
-	if (minutes < 10) {
-		minutes = "0" + minutes;
-	}
-	return hours + ":" + minutes;
-} // niceTime()
+}); // Register
 
 const Header = React.createClass({
 	getInitialState: function() {
@@ -153,6 +46,7 @@ const Header = React.createClass({
 		};
 	},
 	toggleMenu: function() {
+		haptic();
 		this.setState({
 			showMenu: !this.state.showMenu
 		});
@@ -167,7 +61,7 @@ const Header = React.createClass({
 			case "back":
 				var left = (
 					<div className="left-anchor">
-						<a href="#" className="maticon">chevron_left</a>
+						<a href="#" className="maticon">&#xE314;</a>
 					</div>
 				);
 				var headerStyle = "middle";
@@ -178,18 +72,24 @@ const Header = React.createClass({
 				var left = (
 					<div className="right-anchor">
 						<ul className={"menu-links " + (this.state.showMenu ? "visible" : "hidden")}>
-							<li className="pep-logo-link"><img src="img/PEP_logo.png" /></li>
+							<li className="pep-logo-link"><img src="img/menu-logo.png" /></li>
 							<li className="menu-link">
-								<Link activeClassName="active-menu-link" to="/my" onClick={this.toggleMenu}><i className="maticon">query_builder</i> My Schedule</Link>
+								<Link activeClassName="active-menu-link" to="/" onClick={this.toggleMenu}><i className="maticon">mic</i> Talks</Link>
 							</li>
 							<li className="menu-link">
-								<Link activeClassName="active-menu-link" to="/" onClick={this.toggleMenu}><i className="maticon">explore</i> Explore</Link>
+								<Link activeClassName="active-menu-link" to="/social" onClick={this.toggleMenu}><i className="maticon">&#xE8AF;</i> Social</Link>
 							</li>
 							<li className="menu-link">
-								<Link activeClassName="active-menu-link" to="/social" onClick={this.toggleMenu}><i className="maticon">question_answer</i> Social</Link>
+								<Link activeClassName="active-menu-link" to="/participants" onClick={this.toggleMenu}><i className="maticon">face</i> Participants</Link>
+							</li>
+							<li className="menu-link">
+								<Link activeClassName="active-menu-link" to="/partners" onClick={this.toggleMenu}><i className="maticon">star</i> Partners</Link>
+							</li>
+							<li className="menu-link">
+								<Link activeClassName="active-menu-link" to="/map" onClick={this.toggleMenu}><i className="maticon">map</i> Map</Link>
 							</li>
 						</ul>
-						<a onClick={this.toggleMenu} className="maticon">menu</a>
+						<a onTouchStart={this.toggleMenu} className="maticon">menu</a>
 					</div>
 				);
 				var headerStyle = "top";
@@ -197,9 +97,10 @@ const Header = React.createClass({
 			case "refresh":
 				var right = (
 					<div className="right-anchor">
-						<a onClick={this.refresh} className="maticon">cloud_download</a>
+						<a onTouchStart={this.refresh} className="maticon">cloud_download</a>
 					</div>
 				);
+			break;
 		}
 		// console.log(this.props.background);
 		if (this.props.background != undefined) {
@@ -210,11 +111,14 @@ const Header = React.createClass({
 		} else {
 			var screenTitle = this.props.title;
 		}
+		if (this.props.eventDate) {
+			var eventDate = (<span className="event-date-in-header">{this.props.eventDate}</span>);
+		}
 		return(
 			<div className={"app-header headertype-" + headerStyle + " eventheader-" + this.props.eventid} >
 				{bgimg}
 				{left}
-				<span className="event-date-in-header">{this.props.eventDate}</span>
+				{eventDate}
 				<h1 className={"screen-title" + (this.props.title=="PEP" ? " home-title" : "")}>{screenTitle}</h1>
 				{right}
 				<div className="clearfix"></div>
@@ -247,20 +151,6 @@ const EventListItem = React.createClass({
 			followed: (eventsIfollow[this.props.id] == "yes")
 		});
 	},
-	faveme: function() {
-		if (localStorage.eventsIfollow == undefined) {
-			var eventsIfollow = {};
-		} else {
-			var eventsIfollow = JSON.parse(localStorage.eventsIfollow);
-		}
-		if (this.state.followed) {
-			eventsIfollow[this.state.id] = "no";
-		} else {
-			eventsIfollow[this.state.id] = "yes";
-		}
-		this.setState({followed: !this.state.followed});
-		localStorage.setItem("eventsIfollow", JSON.stringify(eventsIfollow));
-	},
 	render: function() {
 		var element = jQuery.parseJSON(localStorage.getItem("event_" + this.props.id));
 		if (!!element) {
@@ -271,17 +161,13 @@ const EventListItem = React.createClass({
 			var nice_date = niceDate(fromDate);
 			return(
 				<div className={this.props.listItemClass}>
-					<a
-						onClick={this.faveme}
-						className={"maticon event-icon-in-list event-icon" + (this.state.followed ? " faved" : "")}>{this.state.followed ? "favorite" : "favorite_border"}</a>
 					<Link to={"/events/" + element.id}>
 						{(element.hasOwnProperty("medium_image")) ? <img src={element.medium_image} /> : (element.hasOwnProperty("thumbnail_image") ? <img src={element.thumbnail_image} /> : <img/> )}
 						<h5 className="list-item-title">
 								{element.title.rendered}
 						</h5>
 						<div className="list-item-description">
-							<p className="list-item-description-text">{element.acf.speaker} & {element._OrganizerOrganizer}</p>
-							<p className="list-item-description-time">{nice_date} {fromNicetime} to {toNicetime}</p>
+							<p className="list-item-description-text">{element.acf.speaker}</p>
 						</div>
 					</Link>
 				</div>
@@ -292,180 +178,6 @@ const EventListItem = React.createClass({
 	}
 }); // EventListItem
 
-const Main = React.createClass({
-	getInitialState: function() {
-		return {
-			children: "",
-		};
-	},
-	componentDidMount: function() {
-		DataLayer.events(function(response) {
-			// no dothing
-		});
-		if (localStorage.myEmail == undefined) {
-			this.setState
-		} else {
-			this.setState({children: this.props.children});
-		}
-	},
-	render: function() {
-		return(
-			<div className="row">
-				<div className="main">
-					{this.props.children}
-				</div>
-			</div>
-		);
-	}
-}); // Main
-const Home = React.createClass({
-	getInitialState: function() {
-		return {
-			events: []
-		}
-	},
-	share: function() {
-		window.plugins.socialsharing.share(
-			"Hello World!",
-			"You might be interested in",
-			null,
-			"http://www.pep.photo/"
-		);
-	},
-	componentDidMount: function() {
-		// load data into events array
-		if (localStorage.events != undefined) {
-			var events = jQuery.parseJSON(localStorage.events);
-			// console.log(events);
-			// var sorted = events.sort(function(a, b) {
-			// 	if (a.hasOwnProperty.hero_event && b.hasOwnProperty.hero_event) {
-			// 		console.log("0");
-			// 		return 0;
-			// 	}
-			// 	if (a.hasOwnProperty.hero_event && !b.hasOwnProperty.hero_event) {
-			// 		console.log("-1");
-			// 		return -1;
-			// 	}
-			// 	if (!a.hasOwnProperty.hero_event && b.hasOwnProperty.hero_event) {
-			// 		console.log("1");
-			// 		return 1;
-			// 	}
-			// }).reverse();
-			// console.log(sorted);
-			this.setState({
-				events: events
-			});
-		} else {
-			DataLayer.events( function(response) {
-				this.setState({
-					events: response
-				});
-			}.bind(this));
-		}
-	},
-	render: function() {
-		var events = this.state.events.map( function(element, idx) {
-			if (element.hasOwnProperty("hero_event")) {
-				var listType = "hero";
-				var listItemClass = "list-item list-item-hero";
-			} else {
-				var listType = "normal";
-				var listItemClass = "list-item list-item-normal";
-			}
-			// console.log(element);
-			return (
-				<EventListItem
-					key={idx}
-					id={element.id}
-					element={element}
-					listType={listType}
-					listItemClass={listItemClass} />
-			);
-		});
-		var header = (<Header title="PEP" right="menu" />);
-		return (
-			<section className="list-view">
-				{header}
-				{events}
-			</section>
-		);
-	}
-}); // Home
-const Faved = React.createClass({
-	getInitialState: function() {
-		return {
-			events: [],
-			haveFaves: false
-		}
-	},
-	componentDidMount: function() {
-		// load data into events array
-		if (localStorage.events != undefined) {
-			if (localStorage.eventsIfollow != undefined) {
-				var events = jQuery.parseJSON(localStorage.events);
-				var eventsIfollow = jQuery.parseJSON(localStorage.eventsIfollow);
-				var myEvents = [];
-				for (var i = events.length - 1; i >= 0; i--) {
-					if (eventsIfollow[events[i].id] == "yes") {
-						myEvents.push(events[i]);
-						this.setState({haveFaves: true});
-					}
-				}
-			}
-			this.setState({
-				events: myEvents
-			});
-		}
-	},
-	render: function() {
-		var events = this.state.events.map( function(element, idx) {
-			var listItemClass = "list-item list-item-normal";
-			return (
-				<EventListItem
-					key={idx}
-					id={element.id}
-					element={element}
-					listItemClass={listItemClass} />
-			);
-		});
-		if (!this.state.haveFaves) {
-			events = (
-				<li className="empty-message">You haven&rsquo;t selected any events yet</li>
-			);
-		}
-		var header = (<Header title="My Schedule" left="menu" />);
-		return (
-			<ul className="list-view">
-				{header}
-				{events}
-			</ul>
-		);
-	}
-}); // Faved
-const Social = React.createClass({
-	getInitialState: function() {
-		return {
-			socials: DataLayer.socials()
-		};
-	},
-	render: function() {
-		var socials = this.state.socials.map(function(element, idx) {
-			return (
-				<li className="social-box" key={idx}>
-					<a href={element.link}>
-						<img src={element.img} alt={element.caption} />
-					</a>
-				</li>
-			);
-		});
-		return (
-			<ul className="list-view">
-				<Header title="Social" left="menu" />
-				{socials}
-			</ul>
-		);
-	}
-});
 const TheEvent = React.createClass({
 	getInitialState: function() {
 		return {
@@ -478,41 +190,19 @@ const TheEvent = React.createClass({
 					rendered: ""
 				},
 			},
-			followed: false
 		};
 	},
 	componentDidMount: function() {
-		if (localStorage.eventsIfollow == undefined) {
-			var eventsIfollow = {};
-			eventsIfollow[this.props.params.id] = "no";
-		} else {
-			var eventsIfollow = JSON.parse(localStorage.eventsIfollow);
-		}
-		localStorage.setItem("eventsIfollow", JSON.stringify(eventsIfollow));
 		var that = this
 		DataLayer.event(that.props.params.id, function(theEvent) {
 			that.setState({
 				id: that.props.params.id,
 				event: theEvent,
-				followed: (eventsIfollow[that.props.params.id] == "yes")
 			});
 		});
 	},
-	faveme: function() {
-		if (localStorage.eventsIfollow == undefined) {
-			var eventsIfollow = {};
-		} else {
-			var eventsIfollow = JSON.parse(localStorage.eventsIfollow);
-		}
-		if (this.state.followed) {
-			eventsIfollow[this.state.id] = "no";
-		} else {
-			eventsIfollow[this.state.id] = "yes";
-		}
-		this.setState({followed: !this.state.followed});
-		localStorage.setItem("eventsIfollow", JSON.stringify(eventsIfollow));
-	},
 	share: function() {
+		haptic();
 		window.plugins.socialsharing.share(
 			this.state.event.content.rendered,
 			"You might be interested in " + this.state.event.title.rendered,
@@ -539,10 +229,7 @@ const TheEvent = React.createClass({
 				<Header title={this.state.event.title.rendered} eventDate={dt} background={this.state.event.medium_image} eventid={this.props.params.id} left="back" />
 				<div className="event-sidebar">
 					<a
-						onClick={this.faveme}
-						className={"maticon event-icon" + (this.state.followed ? " faved" : "")}>{this.state.followed ? "favorite" : "favorite_border"}</a>
-					<a
-						onClick={this.share}
+						onTouchStart={this.share}
 						className="maticon event-icon">share</a>
 					<p className="event-times">
 						<span className="event-begin">{start}</span> -
@@ -555,16 +242,285 @@ const TheEvent = React.createClass({
 			</div>
 		);
 	}
-});
+}); // TheEvent
+const Main = React.createClass({
+	getInitialState: function() {
+		return {
+			children: "",
+		};
+	},
+	componentDidMount: function() {
+		DataLayer.events(function(response) {
+			// no dothing
+		});
+		if (localStorage.myEmail == undefined) {
+			
+		} else {
+			this.setState({children: this.props.children});
+		}
+	},
+	render: function() {
+		return(
+			<div className="row">
+				<div className="main">
+					{this.props.children}
+				</div>
+			</div>
+		);
+	}
+}); // Main
+const Home = React.createClass({
+	getInitialState: function() {
+		return {
+			events: []
+		}
+	},
+	componentDidMount: function() {
+		// load data into events array
+		if (localStorage.events != undefined) {
+			var events = jQuery.parseJSON(localStorage.events);
+			this.setState({
+				events: events
+			});
+		} else {
+			DataLayer.events( function(response) {
+				this.setState({
+					events: response
+				});
+			}.bind(this));
+		}
+	},
+	render: function() {
+		if (this.state.events.length > 0) {
+			var events = this.state.events.map( function(element, idx) {
+				var listType = "normal";
+				var listItemClass = "list-item list-item-normal";
+				return (
+					<EventListItem
+						key={idx}
+						id={element.id}
+						element={element}
+						listType={listType}
+						listItemClass={listItemClass} />
+				);
+			});
+		} else {
+			var events = (
+				<span className="loading">Loading</span>
+			);
+		}
+		var header = (<Header title="PEP" right="menu" />);
+		return (
+			<section className="list-view">
+				{header}
+				{events}
+			</section>
+		);
+	}
+}); // Home
+
+const Social = React.createClass({
+	getInitialState: function() {
+		return {
+			socials: []
+		};
+	},
+	componentDidMount: function() {
+		var that = this;
+		DataLayer.socials( function(response) {
+			that.setState({
+				socials: response
+			});
+			console.log(response);
+		});
+	},
+	render: function() {
+		console.log(this.state.socials);
+		console.log(this.state.socials.length);
+		if (this.state.socials.length > 0) {
+			var socials = this.state.socials.map(function(element, idx) {
+				return (
+					<Shareable
+						id={element.id}
+						key={idx} />
+				);
+			});
+		} else {
+			var socials = (
+				<span className="loading">Loading</span>
+			);
+		}
+		return (
+			<ul className="list-view">
+				<Header title="Social" right="menu" />
+				{socials}
+			</ul>
+		);
+	}
+}); // Social
+
+const Shareable = React.createClass({
+	getInitialState: function() {
+		return {
+			id: 0,
+			element: {},
+		}
+	},
+	componentDidMount: function() {
+		this.setState({
+			id: this.props.id,
+			element: JSON.parse(localStorage.getItem("shareable_" + this.props.id))
+		});
+	},
+	share: function() {
+		haptic();
+		var that = this;
+		console.log(this.state.element.tags);
+		var tags = this.state.element.tags.join(" #");
+		console.log(that.state.element);
+		console.log(tags);
+		var plainContent = $(that.state.element.content.rendered).text() + " #" + tags;
+		window.plugins.socialsharing.share(
+			that.state.element.title.rendered + tags,
+			null,
+			that.state.element.medium_image,
+			"http://www.pep.photo/"
+		);
+	},
+	render: function() {
+		// var element = jQuery.parseJSON(localStorage.getItem("shareable_" + this.props.id));
+		var element = this.state.element;
+		if (element.id != undefined) {
+			return(
+				<div className="list-item list-item-normal">
+					{(element.hasOwnProperty("medium_image")) ? <img src={element.medium_image} /> : (element.hasOwnProperty("thumbnail_image") ? <img src={element.thumbnail_image} /> : <img/> )}
+					<div className="shareable-description" onTouchStart={this.share}>
+						<h5 className="shareable-title">
+							{element.title.rendered} | <i className="maticon">share</i>
+						</h5>
+						<p className="list-item-description-text">{element.acf.speaker}</p>
+					</div>
+				</div>
+			);
+		} else {
+			return (<li></li>);
+		}
+	}
+}); // Shareable
+const Partners = React.createClass({
+	getInitialState: function() {
+		return {
+			partners: []
+		}
+	},
+	componentDidMount: function() {
+		var that = this;
+		DataLayer.partners( function(response) {
+			that.setState({
+				partners: response
+			});
+		});
+	},
+	render: function() {
+		if (this.state.partners.length > 0) {
+			var partners = this.state.partners.map( function(element, idx) {
+				return (
+					<li className="partner">
+						<a href={element.acf.url}>
+							<img src={element.acf.logo} className="partner-logo" />
+						</a>
+						<h5 className="partner-title">
+							<a href={element.acf.url}>
+								{element.title}
+							</a>
+						</h5>
+						<p className="partner-link">
+							<a href={"http://" + element.acf.url}>{element.acf.url}</a>
+						</p>
+					</li>
+				);
+			});
+		} else {
+			var partners = (<span className="loading">Loading</span>);
+		}
+		return (
+			<div>
+				<Header title="Partners" right="menu" />
+				<ul className="partner-list list-view">
+					{partners}
+				</ul>
+			</div>
+		);
+	}
+}); // Partners
+const Participants = React.createClass({
+	getInitialState: function() {
+		return {
+			participants: []
+		}
+	},
+	componentDidMount: function() {
+		var that = this;
+		DataLayer.participants( function(response) {
+			that.setState({
+				participants: response
+			});
+		});
+	},
+	render: function() {
+		if (this.state.participants.length > 0) {
+			var participants = this.state.participants.map( function(element, idx) {
+				return (
+					<li className="participant">
+						<h5 className="participant-title">
+							{element.title}
+						</h5>
+						<p className="participant-email">
+							<a href={"mailto:" + element.acf.email}>{element.acf.email}</a>
+						</p>
+					</li>
+				);
+			});
+		} else {
+			var participants = (<span className="loading">Loading</span>);
+		}
+		return (
+			<div>
+				<Header title="Participants" right="menu" />
+				<ul className="participant-list list-view">
+					{participants}
+				</ul>
+			</div>
+		);
+	}
+}); // Participants
+const GMap = React.createClass({
+	render: function() {
+		var mapHeight = window.innerHeight - 48;
+		console.log(mapHeight);
+		return (
+			<div>
+				<Header title="The Way to PEP" right="menu" />
+				<span className="loading">Loading</span>
+				<iframe
+					className="map-iframe"
+					src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3772.5702236973657!2d72.8212489143756!3d18.994578759463916!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7ce8b78ac3db9%3A0x395ad82b0a483225!2sThe+St.+Regis+Mumbai!5e0!3m2!1sen!2sin!4v1462360857601"
+					height={mapHeight}
+					allowFullScreen></iframe>
+			</div>
+		);
+	}
+}); // GMap
 
 React.render((
 	<Router>
 		<Route component={Main} title="PEP">
 			<Route path="/" title="PEP" component={Home} />
 				<Route path="events/:id" component={TheEvent} />
-			<Route path="my" title="My Events" component={Faved} />
+			<Route path="map" title="The Way to PEP" component={GMap} />
 			<Route path="social" component={Social} />
-			<Route path="register" />
+			<Route path="participants" component={Participants} />
+			<Route path="partners" component={Partners} />
 		</Route>
 	</Router>
 	), document.getElementById("root")
