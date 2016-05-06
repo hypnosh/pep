@@ -9,7 +9,7 @@ const DataLayer = {
 	},
 	loadTags: function() {
 		serverCalls.getAll("tags?per_page=100", function(response) {
-			console.log(response);
+			// console.log(response);
 			for (var i = response.length - 1; i >= 0; i--) {
 				var response_one = response[i];
 				localStorage.setItem("tag_" + response_one.id, response_one.name);
@@ -64,6 +64,20 @@ const DataLayer = {
 					response_one.medium_image = media.media_details.sizes.medium.source_url;
 				}
 				response_one.thumbnail_image = media.media_details.sizes.thumbnail.source_url;
+
+				if (type == "shareable") {
+					var eventId = response_one._custom_post_type_onomies_relationship;
+					console.log(eventId + " is the shareable's parent event");
+					if (localStorage.getItem("socialsof_" + eventId) == undefined) {
+						var socialOfEvent = {};
+					} else {
+						var socialOfEvent = JSON.parse(localStorage.getItem("socialsof_" + eventId));
+					}
+					socialOfEvent[response_one.date] = response_one;
+						// socialOfEvent.unshift(response_one);	// add the shareable to the array of its
+																// event, in the beginning
+					localStorage.setItem("socialsof_" + eventId, JSON.stringify(socialOfEvent));
+				}
 				localStorage.setItem(type + "_" + response_one.id, JSON.stringify(response_one));
 				if (typeof(spCallback) == "function") {
 					// spCallback(response_one);

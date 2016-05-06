@@ -20,7 +20,7 @@ const registerPushNotifications = function() {
 	var push = PushNotification.init({
 		"android": {
 			"senderID": "2177584716",
-			"icon": "mic_stat_pep_logo",
+			"icon": "ic_stat_pep_logo",
 			"iconColor": "#ffbe00"
 		},
 		"ios": {

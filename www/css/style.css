@@ -89,18 +89,6 @@ a {
 	line-height: 1em;
 	text-align: center;
 }
-.app-header.headertype-middle {
-	position: relative;
-	z-index: 5;
-	height: 117px;
-	overflow: hidden;
-	background-color: crimson;
-}
-.app-header.headertype-middle .left-anchor {
-	position: absolute;
-	bottom: 7px;
-	padding-left: 10px;
-}
 .event-date-in-header {
 	position: absolute;
 	top: 10px;
@@ -114,15 +102,7 @@ a {
 	margin: 0;
 	font-size: 16pt;
 }
-.app-header.headertype-middle h1 {
-	color: #fff;
-	position: absolute;
-	left: 8.33%;
-	bottom: 5px;
-	font-size: 20px;
-	text-align: left;
-	line-height: 1em;``
-}
+
 .left-anchor, .right-anchor, .screen-title {
 	line-height: 2em;
 }
@@ -141,7 +121,22 @@ a {
 	overflow: hidden;
 	position: relative;
 }
-.list-item-title {
+
+.app-header.headertype-middle {
+	position: relative;
+	z-index: 5;
+	height: 0;
+	padding-bottom: 72%;
+	overflow: hidden;
+	background-color: crimson;
+}
+.app-header.headertype-middle .left-anchor {
+	position: absolute;
+	bottom: 7px;
+	text-align: left;
+	/*padding-left: 10px;*/
+}
+.list-item-title, .app-header.headertype-middle h1 {
 	font-family: "Open Sans Bold Italic";
 	position: absolute;
 	bottom: 40px;
@@ -217,6 +212,13 @@ a {
 	font-size: 17px;
 	padding: 10px 0 10px 25px;
 }
+.menu-bottom {
+	width: 100%;
+	font-size: 9px;
+	position: absolute;
+	bottom: 1px;
+	text-align: center;
+}
 .event-content {
 	font-size: 12px;
 	line-height: 2em;
@@ -265,6 +267,13 @@ a, a:hover, a:focus, a:active, .event-icon, .event-icon:hover, .event-icon:focus
 .shareable-description {
 	background: #ff4d4d;
 	padding: 11px 14px 6px;
+}
+.shareable-description.in-event {
+	margin: 10px;
+	display: none;
+}
+.shareable-description.in-event:first-child, .shareable-description.in-event:nth-child(2), .shareable-description.in-event:nth-child(3) {
+	display: block;
 }
 .loading {
 	position: fixed;
