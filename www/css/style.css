@@ -143,6 +143,7 @@ a {
 .list-item-title, .app-header.headertype-middle h1 {
 	font-family: "Open Sans Bold Italic";
 	position: absolute;
+	font-size: 15pt;
 	bottom: 40px;
 	left: 10px;
 	right: 10px;
@@ -319,7 +320,7 @@ a, a:hover, a:focus, a:active, .event-icon, .event-icon:hover, .event-icon:focus
 }
 .partner-logo {
 	height: auto;
-	max-width: 100%;
+	max-width: 75%;
 	max-height: 150px;
 }
 
@@ -358,4 +359,13 @@ a, a:hover, a:focus, a:active, .event-icon, .event-icon:hover, .event-icon:focus
 .list-view {
 	animation-name: slideRight;
 	animation-duration: .3s;
+}
+.add-this {
+	margin-left: 5px;
+	display: inline-block;
+	vertical-align: middle;
+}
+.add-this img {
+	width: auto;
+	margin-right: 0;
 }

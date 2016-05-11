@@ -62,7 +62,7 @@ const DataLayer = {
 	},
 	getImages: function(response_one, type, spCallback) {
 		if (response_one.featured_media > 0) {
-			console.log("featured " + response_one.featured_media);
+			// console.log("featured " + response_one.featured_media);
 			serverCalls.getOne("media", response_one.featured_media, function(media) {
 				if (media.media_details.sizes.app !== undefined) {
 					response_one.medium_image = media.media_details.sizes.app.source_url;
@@ -169,3 +169,15 @@ const haptic = function() {
 		window.plugins.deviceFeedback.haptic(window.plugins.deviceFeedback.VIRTUAL_KEY);
 	}
 }; // haptic
+
+const AddThis = React.createClass({
+	render: function() {
+		return(
+			<span className="add-this">
+				<a href={"https://api.addthis.com/oexchange/0.8/forward/facebook/offer?url=x&pubid=ra-53e86c3845df5870&ct=1&title=" + this.props.title + "+" + this.props.url + "&pco=tbxnj-1.0"} target="_blank"><img src="https://cache.addthiscdn.com/icons/v3/thumbs/32x32/facebook.png" border="0" alt="Facebook"/></a>
+				<a href={"https://api.addthis.com/oexchange/0.8/forward/twitter/offer?url=x&pubid&pubid=ra-53e86c3845df5870&ct=1&title=" + this.props.title + "+" + this.props.url + "&pco=tbxnj-1.0"} target="_blank"><img src="https://cache.addthiscdn.com/icons/v3/thumbs/32x32/twitter.png" border="0" alt="Twitter"/></a>
+				<a href={"https://www.addthis.com/bookmark.php?source=tbx32nj-1.0&v=300&url=x&pubid&pubid=ra-53e86c3845df5870&ct=1&title=" + this.props.title + "+" + this.props.url + "&pco=tbxnj-1.0"} target="_blank"><img src="https://cache.addthiscdn.com/icons/v3/thumbs/32x32/addthis.png" border="0" alt="Addthis"/></a>
+			</span>
+		);
+	}
+}); // AddThis

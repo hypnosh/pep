@@ -10,34 +10,6 @@ const Route = ReactRouter.Route;
 const Link = ReactRouter.Link;
 const browserHistory = ReactRouter.browserHistory;
 const IndexRoute = ReactRouter.IndexRoute;
-// const ReactSwipe = ReactSwipe.ReactSwipe;
-
-const Register = React.createClass({
-	getInitialState: function() {
-		return {
-			myEmail: ""
-		};
-	},
-	updateEmail: function(e) {
-		this.setState({
-			myEmail: e.target.value
-		});
-	},
-	setEmail: function() {
-		haptic();
-		localStorage.setItem("myEmail", this.state.myEmail);
-		// window.location = "/";
-		location.reload();
-	},
-	render: function() {
-		return (
-			<div>
-				<input type="email" required value={this.state.myEmail} onChange={this.updateEmail} />
-				<input type="button" value="Submit" onTouchStart={this.setEmail} />
-			</div>
-		);
-	}
-}); // Register
 
 const Header = React.createClass({
 	noScroll: function(e) {
@@ -106,17 +78,11 @@ const Header = React.createClass({
 								<a href="http://www.13llama.com/">Powered by 13 Llama Studio</a>
 							</li>
 						</ul>
-						<a onTouchStart={this.toggleMenu} className="maticon hamburger">menu</a>
+						<a onClick={this.toggleMenu}
+							className="maticon hamburger">menu</a>
 					</div>
 				);
 				var headerStyle = "top";
-			break;
-			case "refresh":
-				var right = (
-					<div className="right-anchor">
-						<a onTouchStart={this.refresh} className="maticon">cloud_download</a>
-					</div>
-				);
 			break;
 		}
 		// console.log(this.props.background);
@@ -247,10 +213,15 @@ const TheEvent = React.createClass({
 		}
 		if (localStorage.getItem("socialsof_" + this.state.event.id) != undefined) {
 			var socials = $.map(JSON.parse(localStorage.getItem("socialsof_" + this.state.event.id)), function(social, idx) {
+				var tags = social.tags.join(" #");
+				var plainContent = encodeURI($(social.title.rendered).text() + " #" + tags);
 				return (
 					<div className="shareable-description in-event" onTouchStart={that.share.bind(this, social)} id={idx}>
 						<h5 className="shareable-title in-event">
-							{social.title.rendered} | <i className="maticon">share</i>
+							{social.title.rendered} |
+							<AddThis
+								title={plainContent}
+								url="http://www.pep.photo" />
 						</h5>
 					</div>
 				);
@@ -401,10 +372,7 @@ const Shareable = React.createClass({
 	share: function() {
 		haptic();
 		var that = this;
-		console.log(this.state.element.tags);
 		var tags = this.state.element.tags.join(" #");
-		console.log(that.state.element);
-		console.log(tags);
 		var plainContent = $(that.state.element.content.rendered).text() + " #" + tags;
 		window.plugins.socialsharing.share(
 			that.state.element.title.rendered + tags,
@@ -417,12 +385,16 @@ const Shareable = React.createClass({
 		// var element = jQuery.parseJSON(localStorage.getItem("shareable_" + this.props.id));
 		var element = this.state.element;
 		if (this.state.id > 0) {
+			var plainContent = encodeURI($(element.content.rendered).text() + " #" + element.tags.join(" #"));
 			return(
 				<div className="list-item list-item-normal">
 					{(element.hasOwnProperty("medium_image")) ? <img src={element.medium_image} /> : (element.hasOwnProperty("thumbnail_image") ? <img src={element.thumbnail_image} /> : <img/> )}
 					<div className="shareable-description" onTouchStart={this.share}>
 						<h5 className="shareable-title">
-							{element.title.rendered} | <i className="maticon">share</i>
+							{element.title.rendered} |
+							<AddThis
+								title={plainContent}
+								url="http://www.pep.photo" />
 						</h5>
 						<p className="list-item-description-text">{element.acf.speaker}</p>
 					</div>
