@@ -106,7 +106,7 @@ const Header = React.createClass({
 								<a href="http://www.13llama.com/">Powered by 13 Llama Studio</a>
 							</li>
 						</ul>
-						<a onTouchStart={this.toggleMenu} className="maticon">menu</a>
+						<a onTouchStart={this.toggleMenu} className="maticon hamburger">menu</a>
 					</div>
 				);
 				var headerStyle = "top";
@@ -337,7 +337,7 @@ const Home = React.createClass({
 		}
 		var header = (<Header title="PEP" right="menu" />);
 		return (
-			<section className="list-view">
+			<section className="list-view" id="home">
 				{header}
 				{events}
 			</section>
@@ -525,7 +525,7 @@ const GMap = React.createClass({
 		var mapHeight = window.innerHeight - 48;
 		console.log(mapHeight);
 		return (
-			<div>
+			<div className="list-view">
 				<Header title="The Way to PEP" right="menu" />
 				<span className="loading">Loading</span>
 				<iframe

@@ -40,13 +40,27 @@ const Register = React.createClass({
 }); // Register
 
 const Header = React.createClass({
+	noScroll: function(e) {
+		e.preventDefault();
+		e.returnValue = false;
+	},
+	scrollLock: function(key) {
+		window.onwheel = (key ? this.noScroll : null);
+		window.ontouchmove = (key ? this.noScroll : null);
+		window.onmousewheel = (key ? this.noScroll : null);
+	},
 	getInitialState: function() {
 		return {
 			showMenu: false,
 		};
 	},
 	toggleMenu: function() {
-		haptic();
+		// haptic();
+		if (!this.state.showMenu) {
+			this.scrollLock(true);
+		} else {
+			this.scrollLock(false);
+		}
 		this.setState({
 			showMenu: !this.state.showMenu
 		});
@@ -61,7 +75,7 @@ const Header = React.createClass({
 			case "back":
 				var left = (
 					<div className="left-anchor">
-						<a href="#" className="maticon">&#xE314;</a>
+						<a href="javascript:history.back();" className="maticon">&#xE314;</a>
 					</div>
 				);
 				var headerStyle = "middle";
@@ -88,8 +102,11 @@ const Header = React.createClass({
 							<li className="menu-link">
 								<Link activeClassName="active-menu-link" to="/map" onClick={this.toggleMenu}><i className="maticon">map</i> Map</Link>
 							</li>
+							<li className="menu-bottom">
+								<a href="http://www.13llama.com/">Powered by 13 Llama Studio</a>
+							</li>
 						</ul>
-						<a onTouchStart={this.toggleMenu} className="maticon">menu</a>
+						<a onTouchStart={this.toggleMenu} className="maticon hamburger">menu</a>
 					</div>
 				);
 				var headerStyle = "top";
@@ -201,21 +218,25 @@ const TheEvent = React.createClass({
 			});
 		});
 	},
-	share: function() {
-		haptic();
-		window.plugins.socialsharing.share(
-			this.state.event.content.rendered,
-			"You might be interested in " + this.state.event.title.rendered,
-			this.state.event.medium_image,
-			this.state.event.guid
-		);
-	},
 	dsihtml: function(text) {
 		return {
 			__html: text
 		};
 	},
+	share: function(social) {
+		haptic();
+		var tags = social.tags.join(" #");
+		var plainContent = $(social.content.rendered).text() + " #" + tags;
+		console.log(social);
+		window.plugins.socialsharing.share(
+			social.title.rendered + tags,
+			null,
+			social.medium_image,
+			"http://www.pep.photo/"
+		);
+	},
 	render: function() {
+		var that = this;
 		var xContent = this.dsihtml(this.state.event.content.rendered);
 		if (this.state.event._EventStartDate != undefined) {
 			var st = dateForSafari(this.state.event._EventStartDate);
@@ -224,17 +245,22 @@ const TheEvent = React.createClass({
 			var end = niceTime(en);
 			var dt = niceDate(st);
 		}
+		if (localStorage.getItem("socialsof_" + this.state.event.id) != undefined) {
+			var socials = $.map(JSON.parse(localStorage.getItem("socialsof_" + this.state.event.id)), function(social, idx) {
+				return (
+					<div className="shareable-description in-event" onTouchStart={that.share.bind(this, social)} id={idx}>
+						<h5 className="shareable-title in-event">
+							{social.title.rendered} | <i className="maticon">share</i>
+						</h5>
+					</div>
+				);
+			});
+		}
 		return (
 			<div className="event">
 				<Header title={this.state.event.title.rendered} eventDate={dt} background={this.state.event.medium_image} eventid={this.props.params.id} left="back" />
-				<div className="event-sidebar">
-					<a
-						onTouchStart={this.share}
-						className="maticon event-icon">share</a>
-					<p className="event-times">
-						<span className="event-begin">{start}</span> -
-						<span className="event-end">{end}</span>
-					</p>
+				<div>
+					{socials}
 				</div>
 				<div className="event-content">
 					<div dangerouslySetInnerHTML={xContent} />
@@ -311,7 +337,7 @@ const Home = React.createClass({
 		}
 		var header = (<Header title="PEP" right="menu" />);
 		return (
-			<section className="list-view">
+			<section className="list-view" id="home">
 				{header}
 				{events}
 			</section>
@@ -379,18 +405,18 @@ const Shareable = React.createClass({
 		var tags = this.state.element.tags.join(" #");
 		console.log(that.state.element);
 		console.log(tags);
-		var plainContent = $(that.state.element.content.rendered).text() + tags;
+		var plainContent = $(that.state.element.content.rendered).text() + " #" + tags;
 		window.plugins.socialsharing.share(
 			that.state.element.title.rendered + tags,
 			null,
-			that.state.element.thumbnail_image,
+			that.state.element.medium_image,
 			"http://www.pep.photo/"
 		);
 	},
 	render: function() {
 		// var element = jQuery.parseJSON(localStorage.getItem("shareable_" + this.props.id));
 		var element = this.state.element;
-		if (element.id != undefined) {
+		if (this.state.id > 0) {
 			return(
 				<div className="list-item list-item-normal">
 					{(element.hasOwnProperty("medium_image")) ? <img src={element.medium_image} /> : (element.hasOwnProperty("thumbnail_image") ? <img src={element.thumbnail_image} /> : <img/> )}
@@ -407,12 +433,99 @@ const Shareable = React.createClass({
 		}
 	}
 }); // Shareable
+const Partners = React.createClass({
+	getInitialState: function() {
+		return {
+			partners: []
+		}
+	},
+	componentDidMount: function() {
+		var that = this;
+		DataLayer.partners( function(response) {
+			that.setState({
+				partners: response
+			});
+		});
+	},
+	render: function() {
+		if (this.state.partners.length > 0) {
+			var partners = this.state.partners.map( function(element, idx) {
+				return (
+					<li className="partner">
+						<a href={element.acf.url}>
+							<img src={element.acf.logo} className="partner-logo" />
+						</a>
+						<h5 className="partner-title">
+							<a href={element.acf.url}>
+								{element.title}
+							</a>
+						</h5>
+						<p className="partner-link">
+							<a href={"http://" + element.acf.url}>{element.acf.url}</a>
+						</p>
+					</li>
+				);
+			});
+		} else {
+			var partners = (<span className="loading">Loading</span>);
+		}
+		return (
+			<div>
+				<Header title="Partners" right="menu" />
+				<ul className="partner-list list-view">
+					{partners}
+				</ul>
+			</div>
+		);
+	}
+}); // Partners
+const Participants = React.createClass({
+	getInitialState: function() {
+		return {
+			participants: []
+		}
+	},
+	componentDidMount: function() {
+		var that = this;
+		DataLayer.participants( function(response) {
+			that.setState({
+				participants: response
+			});
+		});
+	},
+	render: function() {
+		if (this.state.participants.length > 0) {
+			var participants = this.state.participants.map( function(element, idx) {
+				return (
+					<li className="participant">
+						<h5 className="participant-title">
+							{element.title}
+						</h5>
+						<p className="participant-email">
+							<a href={"mailto:" + element.acf.email}>{element.acf.email}</a>
+						</p>
+					</li>
+				);
+			});
+		} else {
+			var participants = (<span className="loading">Loading</span>);
+		}
+		return (
+			<div>
+				<Header title="Participants" right="menu" />
+				<ul className="participant-list list-view">
+					{participants}
+				</ul>
+			</div>
+		);
+	}
+}); // Participants
 const GMap = React.createClass({
 	render: function() {
 		var mapHeight = window.innerHeight - 48;
 		console.log(mapHeight);
 		return (
-			<div>
+			<div className="list-view">
 				<Header title="The Way to PEP" right="menu" />
 				<span className="loading">Loading</span>
 				<iframe
@@ -432,8 +545,8 @@ React.render((
 				<Route path="events/:id" component={TheEvent} />
 			<Route path="map" title="The Way to PEP" component={GMap} />
 			<Route path="social" component={Social} />
-			<Route path="register" component={Register} />
-			<Route path="register" component={Register} />
+			<Route path="participants" component={Participants} />
+			<Route path="partners" component={Partners} />
 		</Route>
 	</Router>
 	), document.getElementById("root")

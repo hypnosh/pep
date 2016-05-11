@@ -62,6 +62,7 @@ const registerPushNotifications = function() {
 		// data.additionalData
 		console.log(data);
 		window.location = "#social";
+		location.reload();
 		// navigator.notification.alert(data.message, function() {}, data.title);
 	}); //onNotification
 	push.on('error', function(error) {

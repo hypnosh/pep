@@ -4,8 +4,11 @@
 // red: #ff4d4d
 // black: #444 */
 
- *, html, body, p, li, div, span {
+*, html, body, p, li, div, span {
 	font-family: 'Open Sans', helvetica, arial, sans-serif;
+}
+body {
+	-webkit-tap-highlight-color: rgba(239, 240, 224, .5);
 }
 b, strong {
 	font-family: 'Open Sans Bold';
@@ -49,9 +52,10 @@ a {
 	text-decoration: none;
 }
 .hamburger {
-	font-size: 14pt;
-	margin: 20px;
+	padding: 10px;
+	border-radius: 50%;
 }
+
 .left-anchor, .right-anchor {
 	position: absolute;
 	font-size: 20px;
@@ -89,18 +93,6 @@ a {
 	line-height: 1em;
 	text-align: center;
 }
-.app-header.headertype-middle {
-	position: relative;
-	z-index: 5;
-	height: 117px;
-	overflow: hidden;
-	background-color: crimson;
-}
-.app-header.headertype-middle .left-anchor {
-	position: absolute;
-	bottom: 7px;
-	padding-left: 10px;
-}
 .event-date-in-header {
 	position: absolute;
 	top: 10px;
@@ -114,15 +106,7 @@ a {
 	margin: 0;
 	font-size: 16pt;
 }
-.app-header.headertype-middle h1 {
-	color: #fff;
-	position: absolute;
-	left: 8.33%;
-	bottom: 5px;
-	font-size: 20px;
-	text-align: left;
-	line-height: 1em;``
-}
+
 .left-anchor, .right-anchor, .screen-title {
 	line-height: 2em;
 }
@@ -141,7 +125,22 @@ a {
 	overflow: hidden;
 	position: relative;
 }
-.list-item-title {
+
+.app-header.headertype-middle {
+	position: relative;
+	z-index: 5;
+	height: 0;
+	padding-bottom: 72%;
+	overflow: hidden;
+	background-color: crimson;
+}
+.app-header.headertype-middle .left-anchor {
+	position: absolute;
+	bottom: 7px;
+	text-align: left;
+	/*padding-left: 10px;*/
+}
+.list-item-title, .app-header.headertype-middle h1 {
 	font-family: "Open Sans Bold Italic";
 	position: absolute;
 	bottom: 40px;
@@ -217,6 +216,13 @@ a {
 	font-size: 17px;
 	padding: 10px 0 10px 25px;
 }
+.menu-bottom {
+	width: 100%;
+	font-size: 9px;
+	position: absolute;
+	bottom: 1px;
+	text-align: center;
+}
 .event-content {
 	font-size: 12px;
 	line-height: 2em;
@@ -254,17 +260,21 @@ a, a:hover, a:focus, a:active, .event-icon, .event-icon:hover, .event-icon:focus
 	right: 20px;
 	bottom: 5px;
 }
-.faved, .faved:hover, .faved:focus {
-	color: red;
-}
 .map-iframe {
-	margin-top: 48px;
+	/*margin-top: 48px;*/
 	width: 100%;
 	margin-bottom: -10px;
 }
 .shareable-description {
 	background: #ff4d4d;
 	padding: 11px 14px 6px;
+}
+.shareable-description.in-event {
+	margin: 10px;
+	display: none;
+}
+.shareable-description.in-event:first-child, .shareable-description.in-event:nth-child(2), .shareable-description.in-event:nth-child(3) {
+	display: block;
 }
 .loading {
 	position: fixed;
@@ -276,4 +286,73 @@ a, a:hover, a:focus, a:active, .event-icon, .event-icon:hover, .event-icon:focus
 	    -ms-transform: translate(-50%, -50%);
 	     -o-transform: translate(-50%, -50%);
 	        transform: translate(-50%, -50%);
+}
+.participant {
+	padding: 10px 20px;
+	line-height: 1.3em;
+	border-bottom: 1px solid #ddd;
+}
+.participant-title, .partner-title span {
+	font-family: "Open Sans Bold";
+}
+.participant-email {
+	color: #777;
+}
+.partner {
+	float: left;
+	width: 50%;
+	box-sizing: border-box;
+	padding: 0;
+	border-right: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	min-height: 100px;
+}
+.partner-title, .partner-link {
+	margin-left: 15px;
+	font-size: 9pt;
+	text-align: left;
+}
+.partner-title {
+	color: #000;
+}
+.partner-logo {
+	width: 100%;
+	height: auto;
+}
+
+@keyframes slideLeft {
+	from {
+		transition-duration: .3s;
+		transition-property: transform, opacity;
+		transition-timing-function: ease-out;
+		transform: translate3d(100%, 0, 0);
+		z-index: 1000;
+		opacity: 0;
+	}
+	to {
+		transform: translate3d(0, 0, 0);
+		opacity: 1;
+	}
+}
+@keyframes slideRight {
+	from {
+		transition-duration: .3s;
+		transition-property: transform, opacity;
+		transition-timing-function: ease-out;
+		transform: translate3d(-100%, 0, 0);
+		z-index: 1000;
+		opacity: 0;
+	}
+	to {
+		transform: translate3d(0, 0, 0);
+		opacity: 1;
+	}
+}
+.event {
+	animation-name: slideLeft;
+	animation-duration: .3s;
+}
+.list-view {
+	animation-name: slideRight;
+	animation-duration: .3s;
 }
