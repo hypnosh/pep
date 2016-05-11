@@ -20,29 +20,29 @@ b i, i b, strong em, em strong, b em, em b, strong i, i strong {
 	font-family: 'Open Sans Bold Italic';
 }
 .maticon {
-  font-family: 'Material Icons';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 1.3em;  /* Preferred icon size */
-  display: inline-block;
-  vertical-align: middle;
-  line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  word-wrap: normal;
-  white-space: nowrap;
-  direction: ltr;
+	font-family: 'Material Icons';
+	font-weight: normal;
+	font-style: normal;
+	font-size: 1.3em;  /* Preferred icon size */
+	display: inline-block;
+	vertical-align: middle;
+	line-height: 1;
+	text-transform: none;
+	letter-spacing: normal;
+	word-wrap: normal;
+	white-space: nowrap;
+	direction: ltr;
 
-  /* Support for all WebKit browsers. */
-  -webkit-font-smoothing: antialiased;
-  /* Support for Safari and Chrome. */
-  text-rendering: optimizeLegibility;
+	/* Support for all WebKit browsers. */
+	-webkit-font-smoothing: antialiased;
+	/* Support for Safari and Chrome. */
+	text-rendering: optimizeLegibility;
 
-  /* Support for Firefox. */
-  -moz-osx-font-smoothing: grayscale;
+	/* Support for Firefox. */
+	-moz-osx-font-smoothing: grayscale;
 
-  /* Support for IE. */
-  font-feature-settings: 'liga';
+	/* Support for IE. */
+	font-feature-settings: 'liga';
 }
 .container-fluid {
 	padding-left: 0;
@@ -282,10 +282,10 @@ a, a:hover, a:focus, a:active, .event-icon, .event-icon:hover, .event-icon:focus
 	top: 50%;
 	left: 50%;
 	-webkit-transform: translate(-50%, -50%);
-	   -moz-transform: translate(-50%, -50%);
-	    -ms-transform: translate(-50%, -50%);
-	     -o-transform: translate(-50%, -50%);
-	        transform: translate(-50%, -50%);
+		 -moz-transform: translate(-50%, -50%);
+			-ms-transform: translate(-50%, -50%);
+			 -o-transform: translate(-50%, -50%);
+					transform: translate(-50%, -50%);
 }
 .participant {
 	padding: 10px 20px;
@@ -300,12 +300,14 @@ a, a:hover, a:focus, a:active, .event-icon, .event-icon:hover, .event-icon:focus
 }
 .partner {
 	float: left;
-	width: 50%;
 	box-sizing: border-box;
-	padding: 0;
-	border-right: 1px solid #ddd;
-	border-bottom: 1px solid #ddd;
+	padding: 0 15px;
 	min-height: 100px;
+	width: 100%;
+	text-align: center;
+}
+.partner-half {
+	width: 50%;
 }
 .partner-title, .partner-link {
 	margin-left: 15px;
@@ -316,8 +318,9 @@ a, a:hover, a:focus, a:active, .event-icon, .event-icon:hover, .event-icon:focus
 	color: #000;
 }
 .partner-logo {
-	width: 100%;
 	height: auto;
+	max-width: 100%;
+	max-height: 150px;
 }
 
 @keyframes slideLeft {

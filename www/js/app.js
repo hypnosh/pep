@@ -436,33 +436,48 @@ const Shareable = React.createClass({
 const Partners = React.createClass({
 	getInitialState: function() {
 		return {
-			partners: []
+			partners: [
+				{
+					mode3: "half",
+					title: "SONY",
+					acf: {
+						url: "http://www.sony.co.in/",
+						logo: "img/sony.png"
+					}
+				},
+				{
+					mode3: "half",
+					title: "Zeiss",
+					acf: {
+						url: "http://www.zeiss.com/",
+						logo: "img/zeiss.png"
+					}
+				},
+				{
+					acf: {
+						url: "http://photokrafft.com/",
+						logo: "img/photokrafft.png"
+					},
+					title: "Photokrafft"
+				},
+				{
+					title: "13 Llama Studio",
+					acf: {
+						url: "http://www.13llama.com/",
+						logo: "img/13llama.png"
+					}
+				}
+			]
 		}
-	},
-	componentDidMount: function() {
-		var that = this;
-		DataLayer.partners( function(response) {
-			that.setState({
-				partners: response
-			});
-		});
 	},
 	render: function() {
 		if (this.state.partners.length > 0) {
 			var partners = this.state.partners.map( function(element, idx) {
 				return (
-					<li className="partner">
+					<li className={"partner" + (element.mode ? " partner-" + element.mode: "")}>
 						<a href={element.acf.url}>
-							<img src={element.acf.logo} className="partner-logo" />
+							<img src={element.acf.logo} alt={element.title} className="partner-logo" />
 						</a>
-						<h5 className="partner-title">
-							<a href={element.acf.url}>
-								{element.title}
-							</a>
-						</h5>
-						<p className="partner-link">
-							<a href={"http://" + element.acf.url}>{element.acf.url}</a>
-						</p>
 					</li>
 				);
 			});
@@ -488,6 +503,9 @@ const Participants = React.createClass({
 	componentDidMount: function() {
 		var that = this;
 		DataLayer.participants( function(response) {
+			response.sort( function(a, b) {
+				return ((toTitleCase(a.title.rendered) < toTitleCase(b.title.rendered)) ? -1 : 1);
+			});
 			that.setState({
 				participants: response
 			});
@@ -496,13 +514,15 @@ const Participants = React.createClass({
 	render: function() {
 		if (this.state.participants.length > 0) {
 			var participants = this.state.participants.map( function(element, idx) {
+				var email = $(element.content.rendered).text();
+				var name = toTitleCase(element.title.rendered);
 				return (
-					<li className="participant">
+					<li className="participant" id={"participant-" + idx}>
 						<h5 className="participant-title">
-							{element.title}
+							{name}
 						</h5>
 						<p className="participant-email">
-							<a href={"mailto:" + element.acf.email}>{element.acf.email}</a>
+							<a href={"mailto:" + email}>{email}</a>
 						</p>
 					</li>
 				);

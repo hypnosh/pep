@@ -1,3 +1,9 @@
+function toTitleCase(str) {
+	if (typeof(str) !== "string") {
+		return str;
+	}
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
 const DataLayer = {
 	tag: function(id) {
 		var home = this;
@@ -93,7 +99,7 @@ const DataLayer = {
 				callback(JSON.parse(localStorage.participants));
 			}
 		}
-		serverCalls.getAll("participants", function(response) {
+		serverCalls.getAll("participants?per_page=85", function(response) {
 			localStorage.setItem("participants", JSON.stringify(response));
 		}, function(error) {
 			console.log(error);
