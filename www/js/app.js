@@ -84,6 +84,16 @@ const Header = React.createClass({
 				);
 				var headerStyle = "top";
 			break;
+			case "refresh":
+				var right = (
+					<div className="right-anchor">
+						<a onTouchStart={this.refresh} className="maticon">cloud_download</a>
+					</div>
+				);
+			break;
+			default:
+				var right = (<span/>);
+			break;
 		}
 		// console.log(this.props.background);
 		if (this.props.background != undefined) {
