@@ -42,7 +42,7 @@ const DataLayer = {
 	events: function(callback) {
 		var home = this;
 		var amInew = (localStorage.getItem("events") != undefined);
-		serverCalls.getAll("events", function(response) {
+		serverCalls.getAll("events?per_page=100", function(response) {
 			for (var i = response.length - 1; i >= 0; i--) {
 				var response_one = response[i];
 				home.getImages(response_one, "event");

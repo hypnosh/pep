@@ -106,12 +106,19 @@ const Header = React.createClass({
 		}
 		if (this.props.eventDate) {
 			var eventDate = (<span className="event-date-in-header">{this.props.eventDate}</span>);
+			var nowDate = new Date();
+			if ((this.props.fromDate < nowDate) && (nowDate < this.props.toDate)) {
+				var nowInSession = (<p className="now-in-session">Now in Session</p>);
+			} else {
+				var nowInSession = "";
+			}
 		}
 		return(
 			<div className={"app-header headertype-" + headerStyle + " eventheader-" + this.props.eventid} >
 				{bgimg}
 				{left}
 				{eventDate}
+				{nowInSession}
 				<h1 className={"screen-title" + (this.props.title=="PEP" ? " home-title" : "")}>{screenTitle}</h1>
 				{right}
 				<div className="clearfix"></div>
@@ -133,16 +140,16 @@ const EventListItem = React.createClass({
 			id: this.props.id,
 			element: localStorage.getItem("event_" + this.props.id)
 		});
-		if (localStorage.eventsIfollow == undefined) {
-			var eventsIfollow = {};
-			eventsIfollow[this.props.id] = "no";
-		} else {
-			var eventsIfollow = JSON.parse(localStorage.eventsIfollow);
-		}
-		localStorage.setItem("eventsIfollow", JSON.stringify(eventsIfollow));
-		this.setState({
-			followed: (eventsIfollow[this.props.id] == "yes")
-		});
+		// if (localStorage.eventsIfollow == undefined) {
+		// 	var eventsIfollow = {};
+		// 	eventsIfollow[this.props.id] = "no";
+		// } else {
+		// 	var eventsIfollow = JSON.parse(localStorage.eventsIfollow);
+		// }
+		// localStorage.setItem("eventsIfollow", JSON.stringify(eventsIfollow));
+		// this.setState({
+		// 	followed: (eventsIfollow[this.props.id] == "yes")
+		// });
 	},
 	render: function() {
 		var element = jQuery.parseJSON(localStorage.getItem("event_" + this.props.id));
@@ -151,13 +158,27 @@ const EventListItem = React.createClass({
 				var fromNicetime = niceTime(fromDate);
 			var toDate = dateForSafari(element._EventEndDate);
 				var toNicetime = niceTime(toDate);
+			var nowDate = new Date();
+			if ((fromDate < nowDate) && (nowDate < toDate)) {
+				var nowInSession = (<p className="now-in-session">Now in Session</p>);
+			} else {
+				var nowInSession = "";
+			}
 			var nice_date = niceDate(fromDate);
+			var title = $("<p>" + element.title.rendered + "</p>").text();
+			if (element.content.rendered == "") {
+				var link = "";
+			} else {
+				var link = "/events/" + element.id;
+			}
 			return(
 				<div className={this.props.listItemClass}>
 					<Link to={"/events/" + element.id}>
 						{(element.hasOwnProperty("medium_image")) ? <img src={element.medium_image} /> : (element.hasOwnProperty("thumbnail_image") ? <img src={element.thumbnail_image} /> : <img/> )}
+						<p className="list-item-time">{fromNicetime}</p>
+						{nowInSession}
 						<h5 className="list-item-title">
-								{element.title.rendered}
+							{title}
 						</h5>
 						<div className="list-item-description">
 							<p className="list-item-description-text">{element.acf.speaker}</p>
@@ -239,8 +260,16 @@ const TheEvent = React.createClass({
 		}
 		return (
 			<div className="event">
-				<Header title={this.state.event.title.rendered} eventDate={dt} background={this.state.event.medium_image} eventid={this.props.params.id} left="back" />
+				<Header 
+					title={this.state.event.title.rendered} 
+					fromDate={st}
+					toDate={en}
+					eventDate={dt} 
+					background={this.state.event.medium_image} 
+					eventid={this.props.params.id} 
+					left="back" />
 				<div>
+					<p className="event-time">{start}</p>
 					{socials}
 				</div>
 				<div className="event-content">
@@ -289,6 +318,9 @@ const Home = React.createClass({
 			this.setState({
 				events: events
 			});
+			DataLayer.events( function(r) {
+				// do nothing
+			});
 		} else {
 			DataLayer.events( function(response) {
 				this.setState({
@@ -299,7 +331,7 @@ const Home = React.createClass({
 	},
 	render: function() {
 		if (this.state.events.length > 0) {
-			var events = this.state.events.map( function(element, idx) {
+			var events = this.state.events.reverse().map( function(element, idx) {
 				var listType = "normal";
 				var listItemClass = "list-item list-item-normal";
 				return (
