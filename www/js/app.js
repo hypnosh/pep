@@ -193,6 +193,7 @@ const EventListItem = React.createClass({
 }); // EventListItem
 
 const TheEvent = React.createClass({
+	intvl: 0,
 	getInitialState: function() {
 		return {
 			id: 0,
@@ -214,6 +215,12 @@ const TheEvent = React.createClass({
 				event: theEvent,
 			});
 		});
+		this.intvl = setTimeout(function() {
+			location.reload();
+		}, 120 * 1000);
+	},
+	componentWillUnmount: function() {
+		clearTimeout(this.intvl);
 	},
 	dsihtml: function(text) {
 		return {
@@ -290,7 +297,6 @@ const Main = React.createClass({
 			// no dothing
 		});
 		if (localStorage.myEmail == undefined) {
-			
 		} else {
 			this.setState({children: this.props.children});
 		}
@@ -304,8 +310,9 @@ const Main = React.createClass({
 			</div>
 		);
 	}
-}); // Main
+}); // main
 const Home = React.createClass({
+	intvl: 0,
 	getInitialState: function() {
 		return {
 			events: []
@@ -328,6 +335,12 @@ const Home = React.createClass({
 				});
 			}.bind(this));
 		}
+		this.intvl = setTimeout(function() {
+			location.reload();
+		}, 120 * 1000);
+	},
+	componentWillUnmount: function() {
+		clearTimeout(this.intvl);
 	},
 	render: function() {
 		if (this.state.events.length > 0) {
