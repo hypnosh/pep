@@ -99,7 +99,7 @@ const DataLayer = {
 				callback(JSON.parse(localStorage.participants));
 			}
 		}
-		serverCalls.getAll("participants?per_page=85", function(response) {
+		serverCalls.getAll("participants?per_page=100", function(response) {
 			localStorage.setItem("participants", JSON.stringify(response));
 		}, function(error) {
 			console.log(error);
@@ -119,7 +119,7 @@ const DataLayer = {
 	},
 	socials: function(callback) {
 		var home = this;
-		serverCalls.getAll("shareables", function(response) {
+		serverCalls.getAll("shareables?per_page=85", function(response) {
 			for (var i = response.length - 1; i >= 0; i--) {
 				var response_one = response[i];
 				var tags = response_one.tags.map( function(element, idx) {
@@ -174,9 +174,9 @@ const AddThis = React.createClass({
 	render: function() {
 		return(
 			<span className="add-this">
-				<a href={"https://api.addthis.com/oexchange/0.8/forward/facebook/offer?url=x&pubid=ra-53e86c3845df5870&ct=1&title=" + this.props.title + "+" + this.props.url + "&pco=tbxnj-1.0"} target="_blank"><img src="https://cache.addthiscdn.com/icons/v3/thumbs/32x32/facebook.png" border="0" alt="Facebook"/></a>
-				<a href={"https://api.addthis.com/oexchange/0.8/forward/twitter/offer?url=x&pubid&pubid=ra-53e86c3845df5870&ct=1&title=" + this.props.title + "+" + this.props.url + "&pco=tbxnj-1.0"} target="_blank"><img src="https://cache.addthiscdn.com/icons/v3/thumbs/32x32/twitter.png" border="0" alt="Twitter"/></a>
-				<a href={"https://www.addthis.com/bookmark.php?source=tbx32nj-1.0&v=300&url=x&pubid&pubid=ra-53e86c3845df5870&ct=1&title=" + this.props.title + "+" + this.props.url + "&pco=tbxnj-1.0"} target="_blank"><img src="https://cache.addthiscdn.com/icons/v3/thumbs/32x32/addthis.png" border="0" alt="Addthis"/></a>
+				<a href={"https://api.addthis.com/oexchange/0.8/forward/facebook/offer?url=" + this.props.url + "&pubid=ra-53e86c3845df5870&ct=1&title=" + this.props.title + "&pco=tbxnj-1.0"} target="_blank"><img src="https://cache.addthiscdn.com/icons/v3/thumbs/32x32/facebook.png" border="0" alt="Facebook"/></a>
+				<a href={"https://api.addthis.com/oexchange/0.8/forward/twitter/offer?url=" + this.props.url + "&pubid&pubid=ra-53e86c3845df5870&ct=1&title=" + this.props.title + "&pco=tbxnj-1.0"} target="_blank"><img src="https://cache.addthiscdn.com/icons/v3/thumbs/32x32/twitter.png" border="0" alt="Twitter"/></a>
+				<a href={"https://www.addthis.com/bookmark.php?source=tbx32nj-1.0&v=300&url=" + this.props.url + "&pubid&pubid=ra-53e86c3845df5870&ct=1&title=" + this.props.title + "&pco=tbxnj-1.0"} target="_blank"><img src="https://cache.addthiscdn.com/icons/v3/thumbs/32x32/addthis.png" border="0" alt="Addthis"/></a>
 			</span>
 		);
 	}

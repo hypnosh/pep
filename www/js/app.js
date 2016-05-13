@@ -230,7 +230,7 @@ const TheEvent = React.createClass({
 	share: function(social) {
 		haptic();
 		var tags = social.tags.join(" #");
-		var plainContent = $(social.content.rendered).text() + " #" + tags;
+		var plainContent = $(social.title.rendered).text() + " #" + tags;
 		console.log(social);
 		window.plugins.socialsharing.share(
 			social.title.rendered + tags,
@@ -252,14 +252,14 @@ const TheEvent = React.createClass({
 		if (localStorage.getItem("socialsof_" + this.state.event.id) != undefined) {
 			var socials = $.map(JSON.parse(localStorage.getItem("socialsof_" + this.state.event.id)), function(social, idx) {
 				var tags = social.tags.join(" #");
-				var plainContent = encodeURI($(social.title.rendered).text() + " #" + tags);
+				var plainContent = encodeURIComponent(social.title.rendered + " #" + tags);
 				return (
 					<div className="shareable-description in-event" onTouchStart={that.share.bind(this, social)} id={idx}>
 						<h5 className="shareable-title in-event">
 							{social.title.rendered} |
 							<AddThis
 								title={plainContent}
-								url="http://www.pep.photo" />
+								url="http://www.pep.photo/" />
 						</h5>
 					</div>
 				);
@@ -267,13 +267,13 @@ const TheEvent = React.createClass({
 		}
 		return (
 			<div className="event">
-				<Header 
-					title={this.state.event.title.rendered} 
+				<Header
+					title={this.state.event.title.rendered}
 					fromDate={st}
 					toDate={en}
-					eventDate={dt} 
-					background={this.state.event.medium_image} 
-					eventid={this.props.params.id} 
+					eventDate={dt}
+					background={this.state.event.medium_image}
+					eventid={this.props.params.id}
 					left="back" />
 				<div>
 					<p className="event-time">{start}</p>
@@ -384,6 +384,13 @@ const Social = React.createClass({
 				socials: response
 			});
 			console.log(response);
+			for (n in response) {
+				if (response.hasOwnProperty(n)) {
+					console.log(response[n].id);
+					localStorage.setItem("shareable_" + response[n].id, response[n]);
+				}
+			}
+			console.log(response);
 		});
 	},
 	render: function() {
@@ -428,7 +435,7 @@ const Shareable = React.createClass({
 		haptic();
 		var that = this;
 		var tags = this.state.element.tags.join(" #");
-		var plainContent = $(that.state.element.content.rendered).text() + " #" + tags;
+		var plainContent = $(that.state.element.title.rendered).text() + " #" + tags;
 		window.plugins.socialsharing.share(
 			that.state.element.title.rendered + tags,
 			null,
@@ -440,7 +447,8 @@ const Shareable = React.createClass({
 		// var element = jQuery.parseJSON(localStorage.getItem("shareable_" + this.props.id));
 		var element = this.state.element;
 		if (this.state.id > 0) {
-			var plainContent = encodeURI($(element.content.rendered).text() + " #" + element.tags.join(" #"));
+			var plainContent = encodeURIComponent(element.title.rendered + " #" + element.tags.join(" #"));
+			console.log(plainContent);
 			return(
 				<div className="list-item list-item-normal">
 					{(element.hasOwnProperty("medium_image")) ? <img src={element.medium_image} /> : (element.hasOwnProperty("thumbnail_image") ? <img src={element.thumbnail_image} /> : <img/> )}
@@ -449,7 +457,7 @@ const Shareable = React.createClass({
 							{element.title.rendered} |
 							<AddThis
 								title={plainContent}
-								url="http://www.pep.photo" />
+								url="http://www.pep.photo/" />
 						</h5>
 						<p className="list-item-description-text">{element.acf.speaker}</p>
 					</div>
