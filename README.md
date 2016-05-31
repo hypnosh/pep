@@ -3,7 +3,7 @@ App for pep.photo
 
 An Android & iOS app for
 The PEP Talks.
-14th May 2016.
+14th May 2016 & onwards.
 
 Technical Specs
 ===============
